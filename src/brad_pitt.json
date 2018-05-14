@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    { "id": "Brad Pitt", "group": 1 },
+    { "id": "Fight Club", "group": 2 },
+    { "id": "Edward Norton", "group": 1 }
+  ],
+  "links": [
+    { "source": "Brad Pitt", "target": "Fight Club", "value": 1 },
+    { "source": "Edward Norton", "target": "Fight Club", "value": 1 }
+  ]
+}
