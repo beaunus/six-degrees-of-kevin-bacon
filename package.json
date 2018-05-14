@@ -6,7 +6,7 @@
   "author": "Beau Dobbin <beau@beaunus.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon index"
+    "dev": "nodemon src"
   },
   "dependencies": {
     "express": "^4.16.3",
