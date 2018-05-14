@@ -10,16 +10,14 @@ app.use(bodyParser.json());
 
 app.route("/api").get((req, res) => {
   const result = {
-    nodes: [
-      { id: "Brad Pitt", type: "actor" },
-      { id: "Fight Club", type: "movie" },
-      { id: "Edward Norton", type: "actor" }
-    ],
-    links: [
-      { source: "Brad Pitt", target: "Fight Club" },
-      { source: "Edward Norton", target: "Fight Club" }
-    ]
+    nodes: [],
+    links: []
   };
+  if (Array.isArray(req.body)) {
+    for (const actor of req.body) {
+      result.nodes.push(actor);
+    }
+  }
   res.status(200).json(result);
 });
 
