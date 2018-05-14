@@ -12,6 +12,7 @@
     "start": "yarn build && node server.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
     "d3": "^4.0.0",
     "vue": "^2.5.11"
   },
