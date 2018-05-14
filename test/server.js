@@ -39,5 +39,17 @@ describe("API server", () => {
           done();
         });
     });
+    it("it should return an object whose nodes contain the given actors", done => {
+      chai
+        .request(server)
+        .get("/api")
+        .send(["Brad Pitt", "Edward Norton"])
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.nodes.should.contain("Brad Pitt");
+          res.body.nodes.should.contain("Edward Norton");
+          done();
+        });
+    });
   });
 });
