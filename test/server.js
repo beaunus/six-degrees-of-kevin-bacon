@@ -1,10 +1,18 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = "test";
+const PORT = process.env.PORT || 3000;
 
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let server = require("../server");
+let app = require("../server");
 let should = chai.should();
+const chalk = require("chalk");
+
+const server = app.listen(PORT, () =>
+  console.log(
+    chalk.yellow.bold("Test server listening on port: ") + chalk.cyan.bold(PORT)
+  )
+);
 
 chai.use(chaiHttp);
 //Our parent block
