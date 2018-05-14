@@ -9,7 +9,8 @@ app.use("/", serveStatic(path.join(__dirname)));
 app.use(bodyParser.json());
 
 app.route("/api").get((req, res) => {
-  res.send(req.body);
+  const result = [];
+  res.status(200).json(result);
 });
 
 const port = process.env.PORT || 5000;
