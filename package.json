@@ -1,4 +1,10 @@
 {
+  "name": "six-degrees-of-kevin-bacon",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/beaunus/six-degrees-of-kevin-bacon.git",
+  "author": "Beau Dobbin <beau@beaunus.com>",
+  "license": "MIT", 
   "scripts": {
     "dev": "nodemon src/server.js"
   },
