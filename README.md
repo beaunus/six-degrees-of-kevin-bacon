@@ -12,6 +12,17 @@ This was created during my time as a student at Code Chrysalis.
 
 ## Data
 
+### Data model
+
+The data is represented in a graph. There are two kinds of nodes:
+
+* person (actors, directors, etc.)
+* work (movie, tv show)
+
+For now, there is one type of _directed_ edge:
+
+* {person} was on the cast of {work}
+
 ### Data Sources
 
 Data is available from many places.
