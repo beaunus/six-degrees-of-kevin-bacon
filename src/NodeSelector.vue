@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1>Six Degrees of Kevin Bacon</h1>
+    <h1>Node Selector</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: "AppTitle"
+  name: "NodeSelector"
 };
 </script>
 

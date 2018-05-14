@@ -11,6 +11,7 @@
     "start": "yarn build && node server.js"
   },
   "dependencies": {
+    "d3": "^4.0.0",
     "vue": "^2.5.11"
   },
   "devDependencies": {
