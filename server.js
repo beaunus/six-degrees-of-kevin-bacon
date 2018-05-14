@@ -13,6 +13,8 @@ app.route("/api").get((req, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(process.env.PORT || 5000);
+const server = app.listen(process.env.PORT || 5000);
 
 console.log("Server started on port " + port + __dirname);
+
+module.exports = server;
