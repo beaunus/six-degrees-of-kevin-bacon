@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 
 app.route("/api").get(async (req, res) => {
   let result;
-  if (Array.isArray(req.body)) {
-    result = await getShortestPaths(req.body);
+  if (Array.isArray(req.query.actor)) {
+    result = await getShortestPaths(req.query.actor);
   }
   res.status(200).json(result);
 });
