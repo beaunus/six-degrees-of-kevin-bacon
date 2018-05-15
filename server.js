@@ -13,8 +13,6 @@ app.use("/", serveStatic(path.join(__dirname)));
 app.use(bodyParser.json());
 
 app.route("/api").get(async (req, res) => {
-  res.status(200).send("hello");
-
   let result;
   if (Array.isArray(req.query.actor)) {
     result = await getShortestPaths(req.query.actor);
