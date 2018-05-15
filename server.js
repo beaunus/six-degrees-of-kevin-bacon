@@ -28,8 +28,8 @@ async function getShortestPaths(actorNames) {
   const movieToPeople = {};
   const nodesToExamine = [];
   for (const actorName of actorNames) {
-    console.log("HELLO");
     const person = await getPerson(actorName);
+    console.log("person -> ", person);
     personToMovies[person.id] = undefined;
     nodesToExamine.push(person);
   }
@@ -38,9 +38,11 @@ async function getShortestPaths(actorNames) {
     for (person in personToMovies) {
       if (personToMovies[person] === undefined) {
         personToMovies[person] = await getMovies(person);
+        console.log("personToMovies[person] -> ", personToMovies[person]);
       }
     }
     commonMovies = getCommonMovies(personToMovies);
+    console.log("commonMovies -> ", commonMovies);
   }
   return getPaths(actorNames, commonMovies);
 }
