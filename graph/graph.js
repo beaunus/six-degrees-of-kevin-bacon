@@ -40,9 +40,14 @@ function loadGraphFromData(graph) {
 
   const circles = node
     .append("circle")
-    .attr("r", 5)
+    .attr("r", 20)
     .attr("fill", function(d) {
-      return color(d.group);
+      switch (d.group) {
+        case 1:
+          return "lightgreen";
+        case 2:
+          return "pink";
+      }
     })
     .call(
       d3
