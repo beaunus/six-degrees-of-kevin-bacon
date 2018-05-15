@@ -5,6 +5,6 @@ async function getPaths(event) {
   const queryString = actorsArray
     .map(actorName => `actor=${encodeURI(actorName)}`)
     .join("&");
-  const paths = await axios.get(`/api?${queryString}`);
-  console.log(paths.data);
+  const paths = (await axios.get(`/api?${queryString}`)).data;
+  loadGraphFromData(paths);
 }
