@@ -29,6 +29,7 @@ async function getShortestPaths(actorNames) {
   const nodesToExamine = [];
   for (const actorName of actorNames) {
     const person = await getPerson(actorName);
+    return person;
     personToMovies[person.id] = undefined;
     nodesToExamine.push(person);
   }
