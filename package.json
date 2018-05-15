@@ -13,7 +13,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "dev": "yarn build && nodemon index.js",
     "start": "node index.js",
-    "postinstall": "build",
+    "postinstall": "yarn build",
     "test": "mocha --timeout 10000"
   },
   "dependencies": {
