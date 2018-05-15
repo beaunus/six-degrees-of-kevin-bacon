@@ -59,10 +59,10 @@ function getPaths(actorNames, commonMovies) {
         value: 1
       });
     }
-    for (movieJSON of commonMovies) {
-      const movie = JSON.parse(movieJSON);
-      result.nodes.push({ id: movie.name, group: 2 });
-    }
+  }
+  for (movieJSON of commonMovies) {
+    const movie = JSON.parse(movieJSON);
+    result.nodes.push({ id: movie.name, group: 2 });
   }
   return result;
 }
