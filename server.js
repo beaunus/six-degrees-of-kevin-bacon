@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 app.route("/api").get(async (req, res) => {
   let result;
   if (Array.isArray(req.query.actor)) {
+    console.log(`${new Date()} - API QUERY REQUESTED - ${req.query.actor}`);
     result = await getShortestPaths(req.query.actor);
   }
   res.status(200).json(result);
@@ -22,14 +23,21 @@ app.route("/api").get(async (req, res) => {
 
 module.exports = app;
 
+function logFunctionCall(callee, args) {
+  console.log(
+    `${new Date()}:${new Date().getMilliseconds()} - ${callee.name} CALLED - `,
+    args
+  );
+}
+
 async function getShortestPaths(actorNames) {
+  logFunctionCall(arguments.callee, arguments);
   // Create a hashmap of accessible nodes from each actor.
   const personToMovies = {};
   const movieToPeople = {};
   const nodesToExamine = [];
   for (const actorName of actorNames) {
     const person = await getPerson(actorName);
-    console.log("person -> ", person);
     personToMovies[person.id] = undefined;
     nodesToExamine.push(person);
   }
@@ -38,16 +46,15 @@ async function getShortestPaths(actorNames) {
     for (person in personToMovies) {
       if (personToMovies[person] === undefined) {
         personToMovies[person] = await getMovies(person);
-        console.log("personToMovies[person] -> ", personToMovies[person]);
       }
     }
     commonMovies = getCommonMovies(personToMovies);
-    console.log("commonMovies -> ", commonMovies);
   }
   return getPaths(actorNames, commonMovies);
 }
 
 function getPaths(actorNames, commonMovies) {
+  logFunctionCall(arguments.callee, arguments);
   const result = {
     nodes: [],
     links: []
@@ -71,6 +78,7 @@ function getPaths(actorNames, commonMovies) {
 }
 
 function getCommonMovies(personToMovies) {
+  logFunctionCall(arguments.callee, arguments);
   const personIds = Object.keys(personToMovies);
   let arrayOfMovies = personToMovies[personIds[0]];
   if (arrayOfMovies === undefined) return new Set();
@@ -87,6 +95,7 @@ function getCommonMovies(personToMovies) {
 }
 
 async function getPerson(personName) {
+  logFunctionCall(arguments.callee, arguments);
   let query = "/search/person";
   let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
     process.env.THE_MOVIE_DB_API_KEY
@@ -100,6 +109,7 @@ async function getPerson(personName) {
 }
 
 async function getMovies(personId) {
+  logFunctionCall(arguments.callee, arguments);
   let query = `/person/${personId}/combined_credits`;
   let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
     process.env.THE_MOVIE_DB_API_KEY
@@ -119,6 +129,7 @@ async function getMovies(personId) {
 }
 
 async function getPeople(movieId) {
+  logFunctionCall(arguments.callee, arguments);
   let query = `/movie/${movieId}/credits`;
   let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
     process.env.THE_MOVIE_DB_API_KEY
