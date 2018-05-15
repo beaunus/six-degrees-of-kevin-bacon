@@ -28,8 +28,8 @@ async function getShortestPaths(actorNames) {
   const movieToPeople = {};
   const nodesToExamine = [];
   for (const actorName of actorNames) {
+    console.log("HELLO");
     const person = await getPerson(actorName);
-    return person;
     personToMovies[person.id] = undefined;
     nodesToExamine.push(person);
   }
