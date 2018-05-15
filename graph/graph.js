@@ -17,6 +17,8 @@ function loadGraphFromData(graph) {
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
+  simulation.force("charge").strength(-10000);
+
   const link = svg
     .append("g")
     .attr("class", "links")

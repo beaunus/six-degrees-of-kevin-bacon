@@ -29,6 +29,151 @@
   <script src="/dist/build.js"></script>
   <script src="./js/index.js"></script>
   <script src="./graph/graph.js"></script>
+  <script>
+    window.onload = () => {
+      const graph = {
+        "nodes": [
+          {
+            "id": "Brad Pitt",
+            "group": 1
+          },
+          {
+            "id": "George Clooney",
+            "group": 1
+          },
+          {
+            "id": "Ocean's Eleven",
+            "group": 2
+          },
+          {
+            "id": "Ocean's Twelve",
+            "group": 2
+          },
+          {
+            "id": "Ocean's Thirteen",
+            "group": 2
+          },
+          {
+            "id": "Confessions of a Dangerous Mind",
+            "group": 2
+          },
+          {
+            "id": "Burn After Reading",
+            "group": 2
+          },
+          {
+            "id": "8",
+            "group": 2
+          },
+          {
+            "id": "Touch of Evil",
+            "group": 2
+          },
+          {
+            "id": "His Highness Hollywood",
+            "group": 2
+          },
+          {
+            "id": "His Way",
+            "group": 2
+          }
+        ],
+        "links": [
+          {
+            "source": "Brad Pitt",
+            "target": "Ocean's Eleven",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "Ocean's Twelve",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "Ocean's Thirteen",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "Confessions of a Dangerous Mind",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "Burn After Reading",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "8",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "Touch of Evil",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "His Highness Hollywood",
+            "value": 1
+          },
+          {
+            "source": "Brad Pitt",
+            "target": "His Way",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "Ocean's Eleven",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "Ocean's Twelve",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "Ocean's Thirteen",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "Confessions of a Dangerous Mind",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "Burn After Reading",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "8",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "Touch of Evil",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "His Highness Hollywood",
+            "value": 1
+          },
+          {
+            "source": "George Clooney",
+            "target": "His Way",
+            "value": 1
+          }
+        ]
+      }
+      loadGraphFromData(graph);
+    }
+  </script>
 </body>
 
 </html>
