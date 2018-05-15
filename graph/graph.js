@@ -1,12 +1,12 @@
 function loadGraphFromData(graph) {
-  var svg = d3.select("svg"),
+  const svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
   svg.selectAll("*").remove();
-  var color = d3.scaleOrdinal(d3.schemeCategory20);
+  const color = d3.scaleOrdinal(d3.schemeCategory20);
 
-  var simulation = d3
+  const simulation = d3
     .forceSimulation()
     .force(
       "link",
@@ -17,7 +17,7 @@ function loadGraphFromData(graph) {
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
-  var link = svg
+  const link = svg
     .append("g")
     .attr("class", "links")
     .selectAll("line")
@@ -28,7 +28,7 @@ function loadGraphFromData(graph) {
       return Math.sqrt(d.value);
     });
 
-  var node = svg
+  const node = svg
     .append("g")
     .attr("class", "nodes")
     .selectAll("g")
@@ -36,7 +36,7 @@ function loadGraphFromData(graph) {
     .enter()
     .append("g");
 
-  var circles = node
+  const circles = node
     .append("circle")
     .attr("r", 5)
     .attr("fill", function(d) {
@@ -50,7 +50,7 @@ function loadGraphFromData(graph) {
         .on("end", dragended)
     );
 
-  var lables = node
+  const lables = node
     .append("text")
     .text(function(d) {
       return d.id;
