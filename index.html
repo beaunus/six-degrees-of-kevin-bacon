@@ -10,10 +10,24 @@
 </head>
 
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <div>
+      <h1>Six Degrees of Kevin Bacon</h1>
+    </div>
+    <div>
+      <h1>Node Selector</h1>
+      <label for="actor1">Actor 1</label>
+      <input type="text" id="actor1">
+      <label for="actor1">Actor 2</label>
+      <input type="text" id="actor2">
+      <button id="submit" onclick="getPaths()">Submit</button>
+    </div>
+  </div>
   <svg width="960" height="600"></svg>
 
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="/dist/build.js"></script>
+  <script src="./js/index.js"></script>
   <script src="./graph/graph.js"></script>
 </body>
 
