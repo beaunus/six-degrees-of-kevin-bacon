@@ -53,14 +53,15 @@ function getPaths(actorNames, commonMovies) {
     result.nodes.push({ id: actorName, group: 1 });
     for (movieJSON of commonMovies) {
       const movie = JSON.parse(movieJSON);
-      if (!result.nodes.includes(movie.name)) {
-        result.nodes.push({ id: movie.name, group: 2 });
-      }
       result.links.push({
         source: actorName,
         target: movie.name,
         value: 1
       });
+    }
+    for (movieJSON of commonMovies) {
+      const movie = JSON.parse(movieJSON);
+      result.nodes.push({ id: movie.name, group: 2 });
     }
   }
   return result;
