@@ -19,30 +19,39 @@ app.route("/api").get(async (req, res) => {
   };
   if (Array.isArray(req.body)) {
     for (const actor of req.body) {
-      let query = "/search/person";
-      let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
-        process.env.THE_MOVIE_DB_API_KEY
-      }&query=${encodeURI(actor)}`;
-      axios
-        .get(url)
-        .then(response => response.data.results[0].id)
-        .then(person_id => {
-          query = `/person/${person_id}/movie_credits`;
-          url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
-            process.env.THE_MOVIE_DB_API_KEY
-          }`;
-          console.log;
-          return axios.get(url);
-        })
-        .then(response => console.log(response.data))
-        .catch(error => {
-          console.log(error);
-        });
-
-      result.nodes.push(actor);
+      const personId = await getPersonId(actor);
+      console.log(personId);
+      console.log(await getMovies(personId));
     }
   }
   res.status(200).json(result);
 });
 
 module.exports = app;
+
+async function getPersonId(personName) {
+  let query = "/search/person";
+  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
+    process.env.THE_MOVIE_DB_API_KEY
+  }&query=${encodeURI(personName)}`;
+  return (await axios.get(url)).data.results[0].id;
+}
+
+async function getMovies(personId) {
+  let query = `/person/${personId}/combined_credits`;
+  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
+    process.env.THE_MOVIE_DB_API_KEY
+  }`;
+  const allData = (await axios.get(url)).data.cast;
+  const result = [];
+  for (const work of allData) {
+    if (work.original_title) {
+      result.push({
+        movieId: work.id,
+        character: work.character,
+        originalTitle: work.original_title
+      });
+    }
+  }
+  return result;
+}
