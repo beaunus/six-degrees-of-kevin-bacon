@@ -3,6 +3,7 @@ function loadGraphFromData(graph) {
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
+  svg.selectAll("*").remove();
   var color = d3.scaleOrdinal(d3.schemeCategory20);
 
   var simulation = d3
