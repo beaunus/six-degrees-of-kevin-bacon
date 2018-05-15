@@ -17,7 +17,6 @@ app.route("/api").get(async (req, res) => {
   if (Array.isArray(req.body)) {
     result = await getShortestPaths(req.body);
   }
-  console.log(result);
   res.status(200).json(result);
 });
 
@@ -33,22 +32,44 @@ async function getShortestPaths(actorNames) {
     personToMovies[person.id] = undefined;
     nodesToExamine.push(person);
   }
-  let result = allActorsAreConnected(personToMovies, movieToPeople);
-  while (!result.size > 0) {
+  let commonMovies = getCommonMovies(personToMovies);
+  while (commonMovies.size < 1) {
     for (person in personToMovies) {
       if (personToMovies[person] === undefined) {
         personToMovies[person] = await getMovies(person);
       }
     }
-    result = await allActorsAreConnected(personToMovies, movieToPeople);
+    commonMovies = getCommonMovies(personToMovies);
+  }
+  return getPaths(actorNames, commonMovies);
+}
+
+function getPaths(actorNames, commonMovies) {
+  const result = {
+    nodes: [],
+    links: []
+  };
+  for (actorName of actorNames) {
+    result.nodes.push({ id: actorName, group: 1 });
+    for (movieJSON of commonMovies) {
+      const movie = JSON.parse(movieJSON);
+      if (!result.nodes.includes(movie.name)) {
+        result.nodes.push({ id: movie.name, group: 2 });
+      }
+      result.links.push({
+        source: actorName,
+        target: movie.name,
+        value: 1
+      });
+    }
   }
   return result;
 }
 
-function allActorsAreConnected(personToMovies, movieToPeople) {
+function getCommonMovies(personToMovies) {
   const personIds = Object.keys(personToMovies);
   let arrayOfMovies = personToMovies[personIds[0]];
-  if (arrayOfMovies === undefined) return false;
+  if (arrayOfMovies === undefined) return new Set();
   let commonMovies = new Set(arrayOfMovies.map(x => JSON.stringify(x)));
   for (let i = 1; i < personIds.length; ++i) {
     const movies = personToMovies[personIds[i]];
