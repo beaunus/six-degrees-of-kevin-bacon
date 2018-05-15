@@ -24,6 +24,7 @@ app.route("/api").get(async (req, res) => {
       console.log(await getMovies(personId));
     }
   }
+  console.log(await getActors(978));
   res.status(200).json(result);
 });
 
@@ -52,6 +53,23 @@ async function getMovies(personId) {
         originalTitle: work.original_title
       });
     }
+  }
+  return result;
+}
+
+async function getActors(movieId) {
+  let query = `/movie/${movieId}/credits`;
+  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
+    process.env.THE_MOVIE_DB_API_KEY
+  }`;
+  const allData = (await axios.get(url)).data.cast;
+  const result = [];
+  for (const person of allData) {
+    result.push({
+      personId: person.id,
+      character: person.character,
+      name: person.name
+    });
   }
   return result;
 }
