@@ -5,6 +5,9 @@
   "repository": "https://github.com/beaunus/six-degrees-of-kevin-bacon.git",
   "author": "Beau Dobbin <beau@beaunus.com>",
   "license": "MIT",
+  "engines": {
+    "node": "10.1.0"
+  },
   "scripts": {
     "hack": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
