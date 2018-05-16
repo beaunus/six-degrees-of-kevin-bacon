@@ -2,6 +2,12 @@
 
 This was created during my time as a student at Code Chrysalis.
 
+## Motivation
+
+Wouldn't it be cool if you could visualize how performers and movies are connected?
+
+You could see a collection of movies that have the same actors and actors who have been in the same movies.
+
 ## Goal
 
 ### MVP
