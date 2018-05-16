@@ -23,6 +23,8 @@ For now, there is one type of _directed_ edge:
 
 * {person} was on the cast of {work}
 
+![screenshot of simple graph](./images/screenshot-simple-example.png "screenshot of simple graph")
+
 ### Data Sources
 
 Data is available from many places.
