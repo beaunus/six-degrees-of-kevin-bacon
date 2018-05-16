@@ -19,36 +19,15 @@ The data is represented in a graph. There are two kinds of nodes:
 * person (actors, directors, etc.)
 * work (movie, tv show)
 
-For now, there is one type of _directed_ edge:
-
-* {person} was on the cast of {work}
+An edge between nodes implies that the _person_ appeared in the _movie_.
 
 ![screenshot of simple graph](./images/screenshot-simple-example.png "screenshot of simple graph")
 
-### Data Sources
+### Data Source
 
-Data is available from many places.
+Data comes from [The Movie Database API](https://developers.themoviedb.org/3). We use three main queries:
 
-#### IMDB
-
-https://www.imdb.com/interfaces/
-
-##### Pros
-
-* Can be downloaded for on-site processing.
-
-##### Cons
-
-* Doesn't include all works for all performers.
-
-#### The Movie Database API
-
-https://developers.themoviedb.org/3
-
-##### Pros
-
-* Includes many works for many performers.
-
-##### Cons
-
-* Limited to 40 requests every 10 seconds.
+* [GET /search/person](https://developers.themoviedb.org/3/search/search-people) - Get a person_id from the String that is entered on the web form.
+* [GET /person/{person_id}/movie_credits](https://developers.themoviedb.org/3/people/get-person-movie-credits) - Get the movies that a person was in.
+* [GET /search/movie](https://developers.themoviedb.org/3/search/search-movies) - Get a movie_id from the String that is entered on the web form.
+* [GET /movie/{movie_id}/credits](https://developers.themoviedb.org/3/movies/get-movie-credits) - Get the people that were in a movie.
