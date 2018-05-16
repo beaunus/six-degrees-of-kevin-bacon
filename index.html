@@ -5,17 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>website</title>
-  <link href="./graph/graph.css" rel="stylesheet">
+  <link href="./style.css" rel="stylesheet">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 
 <body>
   <div id="app">
-    <div>
+    <div id="title">
       <h1>Six Degrees of Kevin Bacon</h1>
     </div>
-    <div>
+    <div id="actor-selector">
       <h1>Node Selector</h1>
       <label for="actor1">Actor 1</label>
       <input type="text" id="actor1" value="George Clooney">
@@ -23,12 +23,14 @@
       <input type="text" id="actor2" value="Matt Damon">
       <button id="submit" onclick="getPaths()">Submit</button>
     </div>
+    <div id="graph-area">
+      <svg id="graph-svg"></svg>
+    </div>
   </div>
-  <svg width="960" height="600"></svg>
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="./js/index.js"></script>
-  <script src="./graph/graph.js"></script>
+  <script src="./graph.js"></script>
   <script>
     window.onload = () => {
       const graph = {

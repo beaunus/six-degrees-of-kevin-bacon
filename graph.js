@@ -1,7 +1,7 @@
 function loadGraphFromData(graph) {
-  const svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
+  const svg = d3.select("#graph-svg"),
+    width = parseInt(svg.style("width"), 10),
+    height = parseInt(svg.style("height"), 10);
 
   svg.selectAll("*").remove();
   const color = d3.scaleOrdinal(d3.schemeCategory20);
