@@ -44,7 +44,7 @@ Data comes from [The Movie Database API](https://developers.themoviedb.org/3). W
 
 After cloning the repository, you need to install the dependencies using `yarn` or `npm`.
 
-```bash
+```sh
 yarn install
 ```
 
@@ -59,7 +59,7 @@ THE_MOVIE_DB_READ_ACCESS_TOKEN = [your key here]
 
 There is a simple script for running the app.
 
-```
+```sh
 yarn start
 ```
 
