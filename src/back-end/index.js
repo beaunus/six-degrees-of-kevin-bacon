@@ -32,7 +32,6 @@ function logFunctionCall(callee, args) {
 
 async function getShortestPaths(actorNames) {
   logFunctionCall(arguments.callee, arguments);
-  // Create a hashmap of accessible nodes from each actor.
   const personToMovies = {};
   const movieToPeople = {};
   const nodesToExamine = [];
@@ -57,7 +56,7 @@ function getPaths(actorNames, commonMovies) {
   logFunctionCall(arguments.callee, arguments);
   const result = {
     nodes: [],
-    links: []
+    links: [],
   };
   for (actorName of actorNames) {
     result.nodes.push({ id: actorName, group: 1 });
@@ -66,7 +65,7 @@ function getPaths(actorNames, commonMovies) {
       result.links.push({
         source: actorName,
         target: movie.name,
-        value: 1
+        value: 1,
       });
     }
   }
@@ -82,13 +81,13 @@ function getCommonMovies(personToMovies) {
   const personIds = Object.keys(personToMovies);
   let arrayOfMovies = personToMovies[personIds[0]];
   if (arrayOfMovies === undefined) return new Set();
-  let commonMovies = new Set(arrayOfMovies.map(x => JSON.stringify(x)));
+  let commonMovies = new Set(arrayOfMovies.map((x) => JSON.stringify(x)));
   for (let i = 1; i < personIds.length; ++i) {
     const movies = personToMovies[personIds[i]];
     commonMovies = new Set(
       movies
-        .filter(x => commonMovies.has(JSON.stringify(x)))
-        .map(x => JSON.stringify(x))
+        .filter((x) => commonMovies.has(JSON.stringify(x)))
+        .map((x) => JSON.stringify(x))
     );
   }
   return commonMovies;
@@ -104,16 +103,14 @@ async function getPerson(personName) {
   return {
     type: "person",
     id: allData.id,
-    name: allData.name
+    name: allData.name,
   };
 }
 
 async function getMovies(personId) {
   logFunctionCall(arguments.callee, arguments);
   let query = `/person/${personId}/combined_credits`;
-  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
-    process.env.THE_MOVIE_DB_API_KEY
-  }`;
+  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
   const allData = (await axios.get(url)).data.cast;
   const result = [];
   for (const work of allData) {
@@ -121,7 +118,7 @@ async function getMovies(personId) {
       result.push({
         type: "movie",
         id: work.id,
-        name: work.original_title
+        name: work.original_title,
       });
     }
   }
@@ -131,16 +128,14 @@ async function getMovies(personId) {
 async function getPeople(movieId) {
   logFunctionCall(arguments.callee, arguments);
   let query = `/movie/${movieId}/credits`;
-  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
-    process.env.THE_MOVIE_DB_API_KEY
-  }`;
+  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
   const allData = (await axios.get(url)).data.cast;
   const result = [];
   for (const person of allData) {
     result.push({
       type: "person",
       id: person.id,
-      name: person.name
+      name: person.name,
     });
   }
   return result;
