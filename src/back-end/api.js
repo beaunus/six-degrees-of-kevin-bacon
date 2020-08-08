@@ -1,18 +1,11 @@
-require("dotenv").config();
-const express = require("express");
-const serveStatic = require("serve-static");
-const path = require("path");
 const axios = require("axios");
-
-const app = express();
-const bodyParser = require("body-parser");
+const express = require("express");
 
 const THE_MOVIE_DB_ENDPOINT = "https://api.themoviedb.org/3";
 
-app.use("/", serveStatic(path.join(`${__dirname}/../front-end`)));
-app.use(bodyParser.json());
+const router = express.Router();
 
-app.route("/api").get(async (req, res) => {
+router.get("/", async (req, res) => {
   let result;
   if (Array.isArray(req.query.actor)) {
     console.log(`${new Date()} - API QUERY REQUESTED - ${req.query.actor}`);
@@ -20,8 +13,6 @@ app.route("/api").get(async (req, res) => {
   }
   res.status(200).json(result);
 });
-
-module.exports = app;
 
 function logFunctionCall(callee, args) {
   console.log(
@@ -140,3 +131,5 @@ async function getPeople(movieId) {
   }
   return result;
 }
+
+module.exports = router;
