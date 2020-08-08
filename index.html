@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Six Degrees of Kevin Bacon</title>
+    <link href="./style.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Six Degrees of Kevin Bacon</title>
-  <link href="./style.css" rel="stylesheet">
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-</head>
-
-<body>
-  <div id="app">
-    <div id="title">
-      <h1>Six Degrees of Kevin Bacon</h1>
-    </div>
-    <div id="actor-selector">
-      <div class="actor-input">
-        <label for="actor1">Actor 1</label>
-        <input type="text" id="actor1" value="Kate Winslet">
+  <body>
+    <div id="app">
+      <div id="title">
+        <h1>Six Degrees of Kevin Bacon</h1>
       </div>
-      <div class="actor-input">
-        <label for="actor2">Actor 2</label>
-        <input type="text" id="actor2" value="Jim Carrey">
+      <div id="actor-selector">
+        <div class="actor-input">
+          <label for="actor1">Actor 1</label>
+          <input type="text" id="actor1" value="Kate Winslet" />
+        </div>
+        <div class="actor-input">
+          <label for="actor2">Actor 2</label>
+          <input type="text" id="actor2" value="Jim Carrey" />
+        </div>
+        <button id="submit" onclick="getPaths()">Submit</button>
       </div>
-      <button id="submit" onclick="getPaths()">Submit</button>
+      <div id="graph-area">
+        <svg id="graph-svg"></svg>
+      </div>
     </div>
-    <div id="graph-area">
-      <svg id="graph-svg"></svg>
-    </div>
-  </div>
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="./js/index.js"></script>
-  <script src="./graph.js"></script>
-</body>
-
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./graph.js"></script>
+  </body>
 </html>
