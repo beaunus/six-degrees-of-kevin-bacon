@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 
 const THE_MOVIE_DB_ENDPOINT = "https://api.themoviedb.org/3";
 
-app.use("/", serveStatic(path.join(__dirname)));
+app.use("/", serveStatic(path.join(`${__dirname}/../front-end`)));
 app.use(bodyParser.json());
 
 app.route("/api").get(async (req, res) => {

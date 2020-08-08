@@ -1,6 +1,6 @@
 const PORT = process.env.PORT || 1337; // default port to 1337
 
-const app = require("./server.js"); // express
+const app = require("./back-end"); // express
 const chalk = require("chalk"); // great CL text coloring module
 
 /* eslint-disable no-console */
