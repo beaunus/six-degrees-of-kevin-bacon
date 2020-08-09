@@ -9,7 +9,8 @@
     "node": ">=10.1.0"
   },
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "lint": "eslint src/**/*.{js,ts} --fix"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -20,8 +21,11 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@beaunus123/style-config": "^1.0.5",
     "@types/node": "^14.0.27",
+    "eslint": "^7.6.0",
     "express": "4.17.1",
+    "lodash": "^4.17.19",
     "nodemon": "^2.0.4",
     "typescript": "^3.9.7"
   }

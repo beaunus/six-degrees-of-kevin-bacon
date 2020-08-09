@@ -1,16 +1,16 @@
+/* eslint-disable */
 function loadGraphFromData(graph) {
   const svg = d3.select("#graph-svg"),
     width = parseInt(svg.style("width"), 10),
     height = parseInt(svg.style("height"), 10);
 
   svg.selectAll("*").remove();
-  const color = d3.scaleOrdinal(d3.schemeCategory20);
 
   const simulation = d3
     .forceSimulation()
     .force(
       "link",
-      d3.forceLink().id(function(d) {
+      d3.forceLink().id(function (d) {
         return d.id;
       })
     )
@@ -26,7 +26,7 @@ function loadGraphFromData(graph) {
     .data(graph.links)
     .enter()
     .append("line")
-    .attr("stroke-width", function(d) {
+    .attr("stroke-width", function (d) {
       return Math.sqrt(d.value);
     });
 
@@ -41,7 +41,7 @@ function loadGraphFromData(graph) {
   const circles = node
     .append("circle")
     .attr("r", 20)
-    .attr("fill", function(d) {
+    .attr("fill", function (d) {
       switch (d.group) {
         case 1:
           return "lightgreen";
@@ -59,13 +59,13 @@ function loadGraphFromData(graph) {
 
   const lables = node
     .append("text")
-    .text(function(d) {
+    .text(function (d) {
       return d.id;
     })
     .attr("x", 6)
     .attr("y", 3);
 
-  node.append("title").text(function(d) {
+  node.append("title").text(function (d) {
     return d.id;
   });
 
@@ -75,21 +75,21 @@ function loadGraphFromData(graph) {
 
   function ticked() {
     link
-      .attr("x1", function(d) {
+      .attr("x1", function (d) {
         return d.source.x;
       })
-      .attr("y1", function(d) {
+      .attr("y1", function (d) {
         return d.source.y;
       })
-      .attr("x2", function(d) {
+      .attr("x2", function (d) {
         return d.target.x;
       })
-      .attr("y2", function(d) {
+      .attr("y2", function (d) {
         return d.target.y;
       });
 
-    node.attr("transform", function(d) {
-      return "translate(" + d.x + "," + d.y + ")";
+    node.attr("transform", function (d) {
+      return `translate(${d.x},${d.y})`;
     });
   }
 

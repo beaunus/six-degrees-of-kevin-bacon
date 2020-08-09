@@ -10,8 +10,8 @@ const loggerFormat = winston.format.combine(
 );
 
 const logger = winston.createLogger({
-  level: "info",
   format: loggerFormat,
+  level: "info",
   transports: [
     new winston.transports.File({ filename: "error.log", level: "error" }),
     new winston.transports.File({ filename: "combined.log" }),
@@ -41,7 +41,6 @@ router.get("/", async (req, res) => {
 async function getShortestPaths(actorNames) {
   logger.debug("getShortestPaths", actorNames);
   const personToMovies = {};
-  const movieToPeople = {};
   const nodesToExamine = [];
   for (const actorName of actorNames) {
     const person = await getPerson(actorName);
@@ -63,24 +62,17 @@ async function getShortestPaths(actorNames) {
 function getPaths(actorNames, commonMovies) {
   logger.debug("getPaths", actorNames, commonMovies);
 
-  const result = {
-    nodes: [],
-    links: [],
-  };
+  const result = { links: [], nodes: [] };
   for (const actorName of actorNames) {
-    result.nodes.push({ id: actorName, group: 1 });
+    result.nodes.push({ group: 1, id: actorName });
     for (const movieJSON of commonMovies) {
       const movie = JSON.parse(movieJSON);
-      result.links.push({
-        source: actorName,
-        target: movie.name,
-        value: 1,
-      });
+      result.links.push({ source: actorName, target: movie.name, value: 1 });
     }
   }
   for (const movieJSON of commonMovies) {
     const movie = JSON.parse(movieJSON);
-    result.nodes.push({ id: movie.name, group: 2 });
+    result.nodes.push({ group: 2, id: movie.name });
   }
   return result;
 }
@@ -88,7 +80,7 @@ function getPaths(actorNames, commonMovies) {
 function getCommonMovies(personToMovies) {
   logger.debug("getCommonMovies", personToMovies);
   const personIds = Object.keys(personToMovies);
-  let arrayOfMovies = personToMovies[personIds[0]];
+  const arrayOfMovies = personToMovies[personIds[0]];
   if (arrayOfMovies === undefined) return new Set();
   let commonMovies = new Set(arrayOfMovies.map((x) => JSON.stringify(x)));
   for (let i = 1; i < personIds.length; ++i) {
@@ -104,48 +96,37 @@ function getCommonMovies(personToMovies) {
 
 async function getPerson(personName) {
   logger.debug("getPerson", personName);
-  let query = "/search/person";
-  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
+  const query = "/search/person";
+  const url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
     process.env.THE_MOVIE_DB_API_KEY
   }&query=${encodeURI(personName)}`;
   const allData = (await axios.get(url)).data.results[0];
-  return {
-    type: "person",
-    id: allData.id,
-    name: allData.name,
-  };
+  return { id: allData.id, name: allData.name, type: "person" };
 }
 
 async function getMovies(personId) {
   logger.info("getMovies", { personId });
-  let query = `/person/${personId}/combined_credits`;
-  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
+  const query = `/person/${personId}/combined_credits`;
+  const url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
   const allData = (await axios.get(url)).data.cast;
   const result = [];
   for (const work of allData) {
     if (work.original_title) {
-      result.push({
-        type: "movie",
-        id: work.id,
-        name: work.original_title,
-      });
+      result.push({ id: work.id, name: work.original_title, type: "movie" });
     }
   }
   return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getPeople(movieId) {
   logger.info("getPeople", movieId);
-  let query = `/movie/${movieId}/credits`;
-  let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
+  const query = `/movie/${movieId}/credits`;
+  const url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
   const allData = (await axios.get(url)).data.cast;
   const result = [];
   for (const person of allData) {
-    result.push({
-      type: "person",
-      id: person.id,
-      name: person.name,
-    });
+    result.push({ id: person.id, name: person.name, type: "person" });
   }
   return result;
 }
