@@ -1,9 +1,33 @@
-const axios = require("axios");
-const express = require("express");
+import axios from "axios";
+import express from "express";
+import winston from "winston";
 
 const THE_MOVIE_DB_ENDPOINT = "https://api.themoviedb.org/3";
 
-const router = express.Router();
+const loggerFormat = winston.format.combine(
+  winston.format.timestamp(),
+  winston.format.simple()
+);
+
+const logger = winston.createLogger({
+  level: "info",
+  format: loggerFormat,
+  transports: [
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+    new winston.transports.File({ filename: "combined.log" }),
+  ],
+});
+
+if (process.env.NODE_ENV !== "production")
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.combine(winston.format.colorize(), loggerFormat)
+      ),
+    })
+  );
+
+export const router = express.Router();
 
 router.get("/", async (req, res) => {
   let result;
@@ -14,15 +38,8 @@ router.get("/", async (req, res) => {
   res.status(200).json(result);
 });
 
-function logFunctionCall(callee, args) {
-  console.log(
-    `${new Date()}:${new Date().getMilliseconds()} - ${callee.name} CALLED - `,
-    args
-  );
-}
-
 async function getShortestPaths(actorNames) {
-  logFunctionCall(arguments.callee, arguments);
+  logger.debug("getShortestPaths", actorNames);
   const personToMovies = {};
   const movieToPeople = {};
   const nodesToExamine = [];
@@ -33,7 +50,7 @@ async function getShortestPaths(actorNames) {
   }
   let commonMovies = getCommonMovies(personToMovies);
   while (commonMovies.size < 1) {
-    for (person in personToMovies) {
+    for (const person in personToMovies) {
       if (personToMovies[person] === undefined) {
         personToMovies[person] = await getMovies(person);
       }
@@ -44,14 +61,15 @@ async function getShortestPaths(actorNames) {
 }
 
 function getPaths(actorNames, commonMovies) {
-  logFunctionCall(arguments.callee, arguments);
+  logger.debug("getPaths", actorNames, commonMovies);
+
   const result = {
     nodes: [],
     links: [],
   };
-  for (actorName of actorNames) {
+  for (const actorName of actorNames) {
     result.nodes.push({ id: actorName, group: 1 });
-    for (movieJSON of commonMovies) {
+    for (const movieJSON of commonMovies) {
       const movie = JSON.parse(movieJSON);
       result.links.push({
         source: actorName,
@@ -60,7 +78,7 @@ function getPaths(actorNames, commonMovies) {
       });
     }
   }
-  for (movieJSON of commonMovies) {
+  for (const movieJSON of commonMovies) {
     const movie = JSON.parse(movieJSON);
     result.nodes.push({ id: movie.name, group: 2 });
   }
@@ -68,7 +86,7 @@ function getPaths(actorNames, commonMovies) {
 }
 
 function getCommonMovies(personToMovies) {
-  logFunctionCall(arguments.callee, arguments);
+  logger.debug("getCommonMovies", personToMovies);
   const personIds = Object.keys(personToMovies);
   let arrayOfMovies = personToMovies[personIds[0]];
   if (arrayOfMovies === undefined) return new Set();
@@ -85,7 +103,7 @@ function getCommonMovies(personToMovies) {
 }
 
 async function getPerson(personName) {
-  logFunctionCall(arguments.callee, arguments);
+  logger.debug("getPerson", personName);
   let query = "/search/person";
   let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${
     process.env.THE_MOVIE_DB_API_KEY
@@ -99,7 +117,7 @@ async function getPerson(personName) {
 }
 
 async function getMovies(personId) {
-  logFunctionCall(arguments.callee, arguments);
+  logger.info("getMovies", { personId });
   let query = `/person/${personId}/combined_credits`;
   let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
   const allData = (await axios.get(url)).data.cast;
@@ -117,7 +135,7 @@ async function getMovies(personId) {
 }
 
 async function getPeople(movieId) {
-  logFunctionCall(arguments.callee, arguments);
+  logger.info("getPeople", movieId);
   let query = `/movie/${movieId}/credits`;
   let url = `${THE_MOVIE_DB_ENDPOINT}${query}?api_key=${process.env.THE_MOVIE_DB_API_KEY}`;
   const allData = (await axios.get(url)).data.cast;
@@ -131,5 +149,3 @@ async function getPeople(movieId) {
   }
   return result;
 }
-
-module.exports = router;
