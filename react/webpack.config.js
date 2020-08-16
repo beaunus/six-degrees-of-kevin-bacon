@@ -4,6 +4,7 @@ const path = require("path");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
+  devServer: { host: "0.0.0.0" },
   devtool: "inline-source-map",
   entry: "./src/index",
   module: {
