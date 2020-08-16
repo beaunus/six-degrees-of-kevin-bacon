@@ -26,12 +26,7 @@ const Home: React.FC = () => {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <Graph
-          height={window.innerHeight}
-          links={links}
-          nodes={nodes}
-          width={window.innerWidth}
-        />
+        <Graph links={links} nodes={nodes} />
       </IonContent>
     </IonPage>
   );

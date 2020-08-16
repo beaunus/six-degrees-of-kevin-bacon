@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { ForceLink } from "d3";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { D3Link, D3Node, Coordinate } from "../types";
 
@@ -9,13 +9,13 @@ import Links from "./Links";
 import Nodes from "./Nodes";
 
 interface Props {
-  width: number;
-  height: number;
   links: Array<D3Link>;
   nodes: Array<D3Node>;
 }
 
-export default function Graph({ height, links, nodes, width }: Props) {
+export default function Graph({ links, nodes }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+
   const simulation = d3
     .forceSimulation<D3Node, D3Link>()
     .force(
@@ -23,7 +23,6 @@ export default function Graph({ height, links, nodes, width }: Props) {
       d3.forceLink<D3Node, D3Link>().id((d) => d.id)
     )
     .force("charge", d3.forceManyBody().strength(-100))
-    .force("center", d3.forceCenter(width / 2, height / 2))
     .nodes(nodes);
 
   simulation.force<ForceLink<D3Node, D3Link>>("link")?.links(links);
@@ -46,11 +45,27 @@ export default function Graph({ height, links, nodes, width }: Props) {
     });
   });
 
+  setImmediate(() => tryToSetForceCenter(ref.current, simulation));
+
   return (
-    <svg className="container" height={height} width={width}>
-      <Links links={links} />
-      <Nodes nodes={nodes} simulation={simulation} />
-      <Labels nodes={nodes} />
-    </svg>
+    <div ref={ref} style={{ height: "100%", width: "100%" }}>
+      <svg className="container" height="100%" width="100%">
+        <Links links={links} />
+        <Nodes nodes={nodes} simulation={simulation} />
+        <Labels nodes={nodes} />
+      </svg>
+    </div>
   );
+}
+
+function tryToSetForceCenter(
+  ref: HTMLDivElement | null,
+  simulation: d3.Simulation<D3Node, D3Link>
+) {
+  ref?.clientHeight && ref.clientWidth
+    ? simulation.force(
+        "center",
+        d3.forceCenter(ref.clientWidth / 2, ref.clientHeight / 2)
+      )
+    : setImmediate(() => tryToSetForceCenter(ref, simulation));
 }
