@@ -3,20 +3,19 @@ import { ForceLink } from "d3";
 import * as React from "react";
 import { useEffect } from "react";
 
+import data from "../miserables";
 import "../styles/App.css";
-import { Coordinate, D3Graph, D3Link, D3Node } from "../types";
+import { Coordinate, D3Link, D3Node } from "../types";
 
 import Labels from "./labels";
 import Links from "./links";
 import Nodes from "./nodes";
 
-interface Props {
-  width: number;
-  height: number;
-  graph: D3Graph;
-}
+export default function App() {
+  const graph = data;
+  const width = window.screen.width;
+  const height = window.screen.height;
 
-export default function App({ width, height, graph }: Props) {
   const simulation = d3
     .forceSimulation<D3Node, D3Link>()
     .force(
