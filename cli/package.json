@@ -1,0 +1,20 @@
+{
+  "name": "cli",
+  "description": "A CLI tool",
+  "version": "1.0.0",
+  "author": "beau@beaunus.com",
+  "dependencies": {
+    "commander": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.1"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon src/index.ts"
+  },
+  "bin": "dist/index.js"
+}

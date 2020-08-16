@@ -1,0 +1,8 @@
+{
+  "clearMocks": true,
+  "collectCoverage": true,
+  "resetMocks": true,
+  "restoreMocks": true,
+  "testEnvironment": "node",
+  "testPathIgnorePatterns": ["dist"]
+}
