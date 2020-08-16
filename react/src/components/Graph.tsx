@@ -63,7 +63,10 @@ function tryToSetForceCenter(
   ref?.clientHeight && ref.clientWidth
     ? simulation.force(
         "center",
-        d3.forceCenter(ref.clientWidth / 2, ref.clientHeight / 2)
+        d3.forceCenter(
+          ref.clientWidth / 2,
+          (ref.clientHeight - ref.offsetTop) / 2
+        )
       )
     : setImmediate(() => tryToSetForceCenter(ref, simulation));
 }
