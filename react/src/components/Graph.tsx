@@ -8,12 +8,10 @@ import Labels from "./Labels";
 import Links from "./Links";
 import Nodes from "./Nodes";
 
-interface Props {
+const Graph: React.FC<{
   links: Array<D3Link>;
   nodes: Array<D3Node>;
-}
-
-export default function Graph({ links, nodes }: Props) {
+}> = ({ links, nodes }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const simulation = d3
@@ -56,7 +54,7 @@ export default function Graph({ links, nodes }: Props) {
       </svg>
     </div>
   );
-}
+};
 
 function tryToSetForceCenter(
   ref: HTMLDivElement | null,
@@ -69,3 +67,5 @@ function tryToSetForceCenter(
       )
     : setImmediate(() => tryToSetForceCenter(ref, simulation));
 }
+
+export default Graph;

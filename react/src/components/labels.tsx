@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from "react";
 
 import { D3Node } from "../types";
 
-function Label({ node }: { node: D3Node }) {
+const Label: React.FC<{ node: D3Node }> = ({ node }) => {
   let thisRef = useRef<SVGTextElement>(null);
 
   useEffect(() => {
@@ -15,14 +15,14 @@ function Label({ node }: { node: D3Node }) {
       {node.id}
     </text>
   );
-}
+};
 
-export default function Labels({ nodes }: { nodes: D3Node[] }) {
-  return (
-    <g className="labels">
-      {nodes.map((node, index) => (
-        <Label key={index} node={node} />
-      ))}
-    </g>
-  );
-}
+const Labels: React.FC<{ nodes: D3Node[] }> = ({ nodes }) => (
+  <g className="labels">
+    {nodes.map((node, index) => (
+      <Label key={index} node={node} />
+    ))}
+  </g>
+);
+
+export default Labels;

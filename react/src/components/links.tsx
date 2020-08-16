@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 import { D3Link } from "../types";
 
-function Link({ link }: { link: D3Link }) {
+const Link: React.FC<{ link: D3Link }> = ({ link }) => {
   let thisRef = useRef<SVGLineElement>(null);
 
   useEffect(() => {
@@ -17,14 +17,13 @@ function Link({ link }: { link: D3Link }) {
       strokeWidth={Math.sqrt(link.value)}
     />
   );
-}
+};
 
-export default function Links({ links }: { links: Array<D3Link> }) {
-  return (
-    <g className="links">
-      {links.map((link, index) => (
-        <Link key={index} link={link} />
-      ))}
-    </g>
-  );
-}
+const Links: React.FC<{ links: Array<D3Link> }> = ({ links }) => (
+  <g className="links">
+    {links.map((link, index) => (
+      <Link key={index} link={link} />
+    ))}
+  </g>
+);
+export default Links;

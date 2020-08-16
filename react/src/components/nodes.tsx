@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 
 import { D3Link, D3Node } from "../types";
 
-function Node({ node, color }: { node: D3Node; color: string }) {
+const Node: React.FC<{ node: D3Node; color: string }> = ({ node, color }) => {
   let thisRef = useRef<SVGCircleElement>(null);
 
   useEffect(() => {
@@ -16,15 +16,12 @@ function Node({ node, color }: { node: D3Node; color: string }) {
       <title>{node.id}</title>
     </circle>
   );
-}
+};
 
-export default function Nodes({
-  nodes,
-  simulation,
-}: {
+const Nodes: React.FC<{
   nodes: Array<D3Node>;
   simulation: Simulation<D3Node, D3Link>;
-}) {
+}> = ({ nodes, simulation }) => {
   useEffect(() => {
     d3.selectAll<Element, D3Node>(".node").call(
       d3
@@ -55,4 +52,6 @@ export default function Nodes({
       ))}
     </g>
   );
-}
+};
+
+export default Nodes;
