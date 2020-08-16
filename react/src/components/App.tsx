@@ -3,7 +3,7 @@ import { ForceLink } from "d3";
 import * as React from "react";
 import { useEffect } from "react";
 
-import data from "../miserables";
+import { links, nodes } from "../miserables.json";
 import "../styles/App.css";
 import { Coordinate, D3Link, D3Node } from "../types";
 
@@ -12,7 +12,6 @@ import Links from "./links";
 import Nodes from "./nodes";
 
 export default function App() {
-  const graph = data;
   const width = window.screen.width;
   const height = window.screen.height;
 
@@ -24,12 +23,12 @@ export default function App() {
     )
     .force("charge", d3.forceManyBody().strength(-100))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .nodes(graph.nodes);
+    .nodes(nodes);
 
-  simulation.force<ForceLink<D3Node, D3Link>>("link")?.links(graph.links);
+  simulation.force<ForceLink<D3Node, D3Link>>("link")?.links(links);
 
   useEffect(() => {
-    simulation.nodes(graph.nodes).on("tick", () => {
+    simulation.nodes(nodes).on("tick", () => {
       d3.selectAll<Element, { source: Coordinate; target: Coordinate }>(".link")
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
@@ -48,9 +47,9 @@ export default function App() {
 
   return (
     <svg className="container" height={height} width={width}>
-      <Links links={graph.links} />
-      <Nodes nodes={graph.nodes} simulation={simulation} />
-      <Labels nodes={graph.nodes} />
+      <Links links={links} />
+      <Nodes nodes={nodes} simulation={simulation} />
+      <Labels nodes={nodes} />
     </svg>
   );
 }
