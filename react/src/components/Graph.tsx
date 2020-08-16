@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { ForceLink } from "d3";
 import React, { useEffect } from "react";
 
-import { Coordinate, D3Link, D3Node } from "../types";
+import { D3Link, D3Node, Coordinate } from "../types";
 
 import Labels from "./Labels";
 import Links from "./Links";

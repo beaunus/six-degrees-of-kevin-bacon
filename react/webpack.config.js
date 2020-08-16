@@ -20,8 +20,8 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new HtmlWebpackPlugin({
-      favicon: "./src/favicon.ico",
-      template: "./src/index.html",
+      favicon: "./public/assets/icon/favicon.ico",
+      template: "./public/index.html",
     }),
   ],
   resolve: { extensions: [".ts", ".tsx", ".js"] },
