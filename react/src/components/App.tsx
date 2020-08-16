@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { ForceLink } from "d3";
-import * as React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { links, nodes } from "../miserables.json";
 import "../styles/App.css";
