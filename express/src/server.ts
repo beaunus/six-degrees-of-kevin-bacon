@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
-import app from "./app";
 dotenv.config();
+
+import app from "./app";
 
 export default app.listen(app.get("port"), () => {
   console.log(

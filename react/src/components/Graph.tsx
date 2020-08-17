@@ -20,7 +20,7 @@ const Graph: React.FC<{
       "link",
       d3.forceLink<D3Node, D3Link>().id((d) => d.id)
     )
-    .force("charge", d3.forceManyBody().strength(-100))
+    .force("charge", d3.forceManyBody().strength(-10))
     .nodes(nodes);
 
   simulation.force<ForceLink<D3Node, D3Link>>("link")?.links(links);
@@ -34,12 +34,12 @@ const Graph: React.FC<{
         .attr("y2", (d) => d.target.y);
 
       d3.selectAll<Element, Coordinate>(".node")
-        .attr("cx", (d) => d.x)
-        .attr("cy", (d) => d.y);
+        .attr("cx", (d) => d?.x)
+        .attr("cy", (d) => d?.y);
 
       d3.selectAll<Element, Coordinate>(".label")
-        .attr("x", (d) => d.x + 5)
-        .attr("y", (d) => d.y + 5);
+        .attr("x", (d) => d?.x + 5)
+        .attr("y", (d) => d?.y + 5);
     });
   });
 

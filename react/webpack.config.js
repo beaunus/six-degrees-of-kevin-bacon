@@ -12,7 +12,15 @@ module.exports = {
       {
         exclude: /node_modules/,
         test: /\.(ts|js)x?$/,
-        use: { loader: "babel-loader" },
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              ["@babel/preset-env", { targets: { esmodules: true } }],
+              "@babel/preset-react",
+            ],
+          },
+        },
       },
       { test: /\.css$/, use: ["style-loader", "css-loader"] },
     ],

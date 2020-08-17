@@ -1,4 +1,4 @@
+.env
+*.log
 coverage
 dist
-
-*.log

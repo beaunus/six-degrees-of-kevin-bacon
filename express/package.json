@@ -7,7 +7,9 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "http-status": "^1.4.2"
+    "http-status": "^1.4.2",
+    "node-themoviedb": "^0.2.4",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",
