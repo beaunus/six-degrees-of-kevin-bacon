@@ -15,4 +15,5 @@
 .label {
   font-size: 10px;
   fill: #fff;
+  z-index: -1;
 }

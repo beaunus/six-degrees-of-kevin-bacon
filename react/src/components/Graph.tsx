@@ -20,7 +20,7 @@ const Graph: React.FC<{
       "link",
       d3.forceLink<D3Node, D3Link>().id((d) => d.id)
     )
-    .force("charge", d3.forceManyBody().strength(-10))
+    .force("charge", d3.forceManyBody().strength(-100))
     .nodes(nodes);
 
   simulation.force<ForceLink<D3Node, D3Link>>("link")?.links(links);

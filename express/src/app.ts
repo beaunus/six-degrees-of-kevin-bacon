@@ -44,8 +44,16 @@ api.get<
       mdb.person
         .getCombinedCredits({ pathParameters: { person_id } })
         .then(({ data }) => data)
+        .catch((e) => {
+          console.log(e);
+          return (null as unknown) as MovieDB.Responses.Person.GetCombinedCredits;
+        })
     )
-  ).then((combinedCredits) => res.json(combinedCredits))
+  )
+    .then((combinedCredits) => res.json(combinedCredits.filter(Boolean)))
+    .catch((e) => {
+      console.error(e);
+    })
 );
 
 api.get<{}, Array<MovieDB.Objects.Person>, {}, { actor_names: Array<string> }>(
