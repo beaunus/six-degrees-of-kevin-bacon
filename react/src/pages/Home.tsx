@@ -215,7 +215,6 @@ const Home: React.FC = () => {
                   ),
                 };
 
-                // setGraph(getLinksAndNodes(moviesByActorName));
                 edgeMovies.clear();
                 personCredits.forEach(({ cast }) =>
                   cast.forEach((x) => edgeMovies.add(x))
@@ -242,7 +241,6 @@ const Home: React.FC = () => {
                 }
                 edgeMovies.clear();
                 moviesByActorName = _.merge(moviesByActorName, newMovieThing);
-                // setGraph(getLinksAndNodes(moviesByActorName));
               }
             }
             setGraph(
