@@ -76,42 +76,12 @@ function trimGraph(
   moviesByActorName: { [actorName: string]: Array<string> },
   actorNames: Array<string>
 ) {
-  const graph = Object.entries(moviesByActorName).reduce(
-    (acc, [actorName, movieNames]) => {
-      acc[actorName] = acc[actorName] || new Set();
-      movieNames.forEach((movieName) => {
-        acc[actorName].add(movieName);
-        acc[movieName] = acc[movieName] || new Set();
-        acc[movieName].add(actorName);
-      });
-      return acc;
-    },
-    {} as { [k: string]: Set<string> }
-  );
-
-  let queue = [actorNames[0]];
-
-  const prevNodeByNode = Object.fromEntries(
-    Object.keys(graph).map((node) => [node, new Set<string>()])
-  );
-  const visited = new Set<string>();
-
-  while (queue.length > 0) {
-    const current = queue.shift() as string;
-    visited.add(current);
-    for (const neighbor of [...graph[current]].filter(
-      (x) => !prevNodeByNode[current].has(x)
-    )) {
-      queue.push(neighbor);
-      visited.add(neighbor);
-      prevNodeByNode[neighbor].add(current);
-    }
-  }
+  var prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
 
   const trimmedMoviesByActorName = {} as { [actorName: string]: Array<string> };
 
   let isActor = true;
-  queue = [actorNames[1]];
+  let queue = [actorNames[1]];
   while (queue.length) {
     let next = Array<string>();
     if (isActor) {
@@ -299,3 +269,40 @@ const Home: React.FC = () => {
 setTimeout(() => document.querySelector("ion-button")?.click(), 500);
 
 export default Home;
+function getPrevNodeByNode(
+  moviesByActorName: { [actorName: string]: string[] },
+  actorNames: string[]
+) {
+  const graph = Object.entries(moviesByActorName).reduce(
+    (acc, [actorName, movieNames]) => {
+      acc[actorName] = acc[actorName] || new Set();
+      movieNames.forEach((movieName) => {
+        acc[actorName].add(movieName);
+        acc[movieName] = acc[movieName] || new Set();
+        acc[movieName].add(actorName);
+      });
+      return acc;
+    },
+    {} as { [k: string]: Set<string> }
+  );
+
+  let queue = [actorNames[0]];
+
+  const prevNodeByNode = Object.fromEntries(
+    Object.keys(graph).map((node) => [node, new Set<string>()])
+  );
+  const visited = new Set<string>();
+
+  while (queue.length > 0) {
+    const current = queue.shift() as string;
+    visited.add(current);
+    for (const neighbor of [...graph[current]].filter(
+      (x) => !prevNodeByNode[current].has(x)
+    )) {
+      queue.push(neighbor);
+      visited.add(neighbor);
+      prevNodeByNode[neighbor].add(current);
+    }
+  }
+  return prevNodeByNode;
+}
