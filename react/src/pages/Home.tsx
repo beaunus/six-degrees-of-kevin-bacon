@@ -198,7 +198,7 @@ const Home: React.FC = () => {
                   [actorName: string]: Array<string>;
                 };
                 edgePersons.clear();
-                for (const credits of movieCredits) {
+                movieCredits.forEach((credits) => {
                   credits.cast.forEach(({ id, name }) => {
                     newMovieThing[name] = newMovieThing[name] || [];
                     newMovieThing[name].push(
@@ -207,7 +207,7 @@ const Home: React.FC = () => {
                     );
                     edgePersons.add({ id, name });
                   });
-                }
+                });
                 edgeMovies.clear();
                 moviesByActorName = _.merge(moviesByActorName, newMovieThing);
               }
