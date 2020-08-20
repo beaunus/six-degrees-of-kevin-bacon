@@ -122,6 +122,68 @@ const Home: React.FC = () => {
 
   const { links, nodes } = graph;
 
+  const handleGoClick = async () => {
+    setGraph(defaultGraph);
+    const persons = await getPersons(...actorNames);
+    moviesByActorName = Object.fromEntries(
+      persons.map(({ name }) => [name, []])
+    );
+    setGraph(getLinksAndNodes(moviesByActorName));
+    const edgePersons = new Set<{ id: number; name: string }>(persons);
+    const edgeMovies = new Set<{
+      id: number;
+      name: string;
+      title: string;
+    }>();
+    const realActorNames = persons.map(({ name }) => name);
+
+    while (!areActorsConnected(moviesByActorName, realActorNames)) {
+      if (edgePersons.size) {
+        const personCredits = await getPersonCredits(
+          ...[...edgePersons].map(({ id }) => id)
+        );
+        moviesByActorName = {
+          ...moviesByActorName,
+          ...Object.fromEntries(
+            [...edgePersons].map(({ name }, index) => [
+              name,
+              personCredits[index].cast
+                .map(({ title }) => title)
+                .filter(Boolean),
+            ])
+          ),
+        };
+
+        edgeMovies.clear();
+        personCredits.forEach(({ cast }) =>
+          cast.forEach((x) => edgeMovies.add(x))
+        );
+        edgePersons.clear();
+      } else {
+        const movieCredits = await getMovieCredits(
+          ...[...edgeMovies].map(({ id }) => id)
+        );
+        const edgeMoviesById = _.keyBy([...edgeMovies], "id");
+        const newMovieThing = {} as {
+          [actorName: string]: Array<string>;
+        };
+        edgePersons.clear();
+        movieCredits.forEach((credits) => {
+          credits.cast.forEach(({ id, name }) => {
+            newMovieThing[name] = newMovieThing[name] || [];
+            newMovieThing[name].push(
+              edgeMoviesById[credits.id].title ||
+                edgeMoviesById[credits.id].name
+            );
+            edgePersons.add({ id, name });
+          });
+        });
+        edgeMovies.clear();
+        moviesByActorName = _.merge(moviesByActorName, newMovieThing);
+      }
+    }
+    setGraph(getLinksAndNodes(trimGraph(moviesByActorName, realActorNames)));
+  };
   return (
     <IonPage>
       <IonHeader>
@@ -150,73 +212,7 @@ const Home: React.FC = () => {
             />
           </IonItem>
         </IonList>
-        <IonButton
-          expand="full"
-          onClick={async () => {
-            setGraph(defaultGraph);
-            const persons = await getPersons(...actorNames);
-            moviesByActorName = Object.fromEntries(
-              persons.map(({ name }) => [name, []])
-            );
-            setGraph(getLinksAndNodes(moviesByActorName));
-            const edgePersons = new Set<{ id: number; name: string }>(persons);
-            const edgeMovies = new Set<{
-              id: number;
-              name: string;
-              title: string;
-            }>();
-            const realActorNames = persons.map(({ name }) => name);
-
-            while (!areActorsConnected(moviesByActorName, realActorNames)) {
-              if (edgePersons.size) {
-                const personCredits = await getPersonCredits(
-                  ...[...edgePersons].map(({ id }) => id)
-                );
-                moviesByActorName = {
-                  ...moviesByActorName,
-                  ...Object.fromEntries(
-                    [...edgePersons].map(({ name }, index) => [
-                      name,
-                      personCredits[index].cast
-                        .map(({ title }) => title)
-                        .filter(Boolean),
-                    ])
-                  ),
-                };
-
-                edgeMovies.clear();
-                personCredits.forEach(({ cast }) =>
-                  cast.forEach((x) => edgeMovies.add(x))
-                );
-                edgePersons.clear();
-              } else {
-                const movieCredits = await getMovieCredits(
-                  ...[...edgeMovies].map(({ id }) => id)
-                );
-                const edgeMoviesById = _.keyBy([...edgeMovies], "id");
-                const newMovieThing = {} as {
-                  [actorName: string]: Array<string>;
-                };
-                edgePersons.clear();
-                movieCredits.forEach((credits) => {
-                  credits.cast.forEach(({ id, name }) => {
-                    newMovieThing[name] = newMovieThing[name] || [];
-                    newMovieThing[name].push(
-                      edgeMoviesById[credits.id].title ||
-                        edgeMoviesById[credits.id].name
-                    );
-                    edgePersons.add({ id, name });
-                  });
-                });
-                edgeMovies.clear();
-                moviesByActorName = _.merge(moviesByActorName, newMovieThing);
-              }
-            }
-            setGraph(
-              getLinksAndNodes(trimGraph(moviesByActorName, realActorNames))
-            );
-          }}
-        >
+        <IonButton expand="full" onClick={handleGoClick}>
           GO
         </IonButton>
         <Graph links={links} nodes={nodes} />
