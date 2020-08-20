@@ -168,7 +168,6 @@ const Home: React.FC = () => {
             const realActorNames = persons.map(({ name }) => name);
 
             while (!areActorsConnected(moviesByActorName, realActorNames)) {
-              // for (let i = 0; i < 3; ++i)
               if (edgePersons.size) {
                 const personCredits = await getPersonCredits(
                   ...[...edgePersons].map(({ id }) => id)
