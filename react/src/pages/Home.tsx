@@ -1,4 +1,3 @@
-import MovieDB from "node-themoviedb";
 import {
   IonButton,
   IonContent,
@@ -12,20 +11,11 @@ import {
 } from "@ionic/react";
 import axios from "axios";
 import _, { flatMap, flatten } from "lodash";
+import MovieDB from "node-themoviedb";
 import qs from "qs";
 import React, { useState } from "react";
 import Graph from "../components/Graph";
 import "./Home.css";
-
-// const actorNames = Array.from({ length: 10 }, () => _.uniqueId("actor"));
-// const movieNames = Array.from({ length: 10 }, () => _.uniqueId("movie"));
-
-// const moviesByActorName = Object.fromEntries(
-//   actorNames.map((actorName) => [
-//     actorName,
-//     _.sampleSize(movieNames, _.random(0, 5)),
-//   ])
-// );
 
 const URI = `http://localhost:3000/api`;
 
@@ -43,11 +33,6 @@ function getLinksAndNodes(moviesByActorName: {
           }))
         )
       ),
-      // ...Object.keys(moviesByActorName).map((name) => ({
-      //   source: name,
-      //   target: "_THE_COMMON_NODE_",
-      //   value: 1,
-      // })),
     ],
     nodes: [
       ...Object.keys(moviesByActorName).map((name) => ({ group: 1, id: name })),
@@ -55,7 +40,6 @@ function getLinksAndNodes(moviesByActorName: {
         group: 2,
         id: name,
       })),
-      // { group: 3, id: "_THE_COMMON_NODE_" },
     ],
   };
 }
@@ -162,7 +146,7 @@ const defaultGraph = { links: [], nodes: [] } as {
 };
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Adam Sandler", "Robert DeNiro"]);
+  const [actorNames, setActorNames] = useState(["Al Pacino", "Robert DeNiro"]);
   const [graph, setGraph] = useState(defaultGraph);
   let moviesByActorName: { [actorName: string]: Array<string> };
 
@@ -313,5 +297,7 @@ const Home: React.FC = () => {
     ).then(flatten);
   }
 };
+
+setTimeout(() => document.querySelector("ion-button")?.click(), 500);
 
 export default Home;
