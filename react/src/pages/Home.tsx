@@ -130,11 +130,7 @@ const Home: React.FC = () => {
     );
     setGraph(getLinksAndNodes(moviesByActorName));
     const edgePersons = new Set<{ id: number; name: string }>(persons);
-    const edgeMovies = new Set<{
-      id: number;
-      name: string;
-      title: string;
-    }>();
+    const edgeMovies = new Set<{ id: number; name: string; title: string }>();
     const realActorNames = persons.map(({ name }) => name);
 
     while (!areActorsConnected(moviesByActorName, realActorNames)) {
@@ -164,9 +160,7 @@ const Home: React.FC = () => {
           ...[...edgeMovies].map(({ id }) => id)
         );
         const edgeMoviesById = _.keyBy([...edgeMovies], "id");
-        const newMovieThing = {} as {
-          [actorName: string]: Array<string>;
-        };
+        const newMovieThing = {} as { [actorName: string]: Array<string> };
         edgePersons.clear();
         movieCredits.forEach((credits) => {
           credits.cast.forEach(({ id, name }) => {
