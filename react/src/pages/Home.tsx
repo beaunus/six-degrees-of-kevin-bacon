@@ -258,6 +258,7 @@ const Home: React.FC = () => {
 setTimeout(() => document.querySelector("ion-button")?.click(), 500);
 
 export default Home;
+
 function getPrevNodeByNode(
   moviesByActorName: { [actorName: string]: string[] },
   actorNames: string[]
