@@ -169,9 +169,9 @@ export function getLinksAndNodes(moviesByActorName: _.Dictionary<string[]>) {
     ),
     nodes: [
       ...Object.keys(moviesByActorName).map((name) => ({ group: 1, id: name })),
-      ..._.uniq(_.flatten(Object.values(moviesByActorName))).map((name) => ({
+      ..._.uniq(Object.values(moviesByActorName).flat()).map((movie) => ({
         group: 2,
-        id: name,
+        id: movie,
       })),
     ],
   };
