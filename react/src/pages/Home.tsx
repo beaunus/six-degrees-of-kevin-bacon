@@ -23,7 +23,7 @@ const defaultGraph = { links: [], nodes: [] } as {
 };
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Al Pacino", "Robert DeNiro"]);
+  const [actorNames, setActorNames] = useState(["Al Pacino", "Jim Carrey"]);
   const [graph, setGraph] = useState(defaultGraph);
 
   return (

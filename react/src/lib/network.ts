@@ -15,7 +15,7 @@ export function getMovieCredits(...movieIds: number[]) {
         )
         .then(({ data }) => data)
     )
-  ).then(_.flatten);
+  ).then((batches) => batches.flat());
 }
 
 export function getPersonCredits(...personIds: number[]) {
@@ -27,13 +27,14 @@ export function getPersonCredits(...personIds: number[]) {
         )
         .then(({ data }) => data)
     )
-  )
-    .then(_.flatten)
-    .then((x) =>
-      x
-        .map(({ cast }) => ({ cast: cast.filter((z) => z.popularity > 9.9) }))
-        .filter(({ cast }) => cast.length)
-    );
+  ).then((batches) =>
+    batches
+      .flat()
+      .map(({ cast }) => ({
+        cast: cast.filter(({ popularity }) => popularity > 9.9),
+      }))
+      .filter(({ cast }) => cast.length)
+  );
 }
 
 export function getPersons(...actorsNames: string[]) {
@@ -45,5 +46,5 @@ export function getPersons(...actorsNames: string[]) {
         )
         .then(({ data }) => data)
     )
-  ).then(_.flatten);
+  ).then((batches) => batches.flat());
 }
