@@ -1,7 +1,6 @@
-import _, { Dictionary, flatten, flatMap } from "lodash";
+import _ from "lodash";
 import MovieDB from "node-themoviedb";
-
-import { getPersonCredits, getMovieCredits } from "./network";
+import { getMovieCredits, getPersonCredits } from "./network";
 
 export async function getConnectedGraph(
   persons: MovieDB.Objects.Person[],
@@ -55,7 +54,7 @@ export async function getConnectedGraph(
 }
 
 export function getPrevNodeByNode(
-  moviesByActorName: Dictionary<string[]>,
+  moviesByActorName: _.Dictionary<string[]>,
   actorNames: string[]
 ) {
   const graph = Object.entries(moviesByActorName).reduce(
@@ -93,12 +92,12 @@ export function getPrevNodeByNode(
 }
 
 export function trimGraph(
-  moviesByActorName: Dictionary<string[]>,
+  moviesByActorName: _.Dictionary<string[]>,
   actorNames: string[]
 ) {
   const prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
 
-  const trimmedMoviesByActorName = {} as Dictionary<string[]>;
+  const trimmedMoviesByActorName = {} as _.Dictionary<string[]>;
 
   let isActor = true;
   let queue = [actorNames[1]];
@@ -131,7 +130,7 @@ export function trimGraph(
 }
 
 export function areActorsConnected(
-  moviesByActorName: Dictionary<string[]>,
+  moviesByActorName: _.Dictionary<string[]>,
   actorNames: string[]
 ) {
   if (actorNames.length <= 1) return true;
@@ -147,9 +146,9 @@ export function areActorsConnected(
     );
 
     movieQueue.forEach((movieName) => visitedMovies.add(movieName));
-    movieQueue = flatten(nextEntries.map(([, movieName]) => movieName)).filter(
-      (movieName) => !visitedMovies.has(movieName)
-    );
+    movieQueue = _.flatten(
+      nextEntries.map(([, movieName]) => movieName)
+    ).filter((movieName) => !visitedMovies.has(movieName));
     visitedActors.push(...nextEntries.map(([actorName]) => actorName));
 
     if (actorNames.every((actorName) => visitedActors.includes(actorName)))
@@ -158,10 +157,10 @@ export function areActorsConnected(
   return false;
 }
 
-export function getLinksAndNodes(moviesByActorName: Dictionary<string[]>) {
+export function getLinksAndNodes(moviesByActorName: _.Dictionary<string[]>) {
   return {
     links: [
-      ...flatMap(
+      ..._.flatMap(
         Object.entries(moviesByActorName).map(([actorName, movieNames]) =>
           movieNames.map((movieName) => ({
             source: actorName,
@@ -173,7 +172,7 @@ export function getLinksAndNodes(moviesByActorName: Dictionary<string[]>) {
     ],
     nodes: [
       ...Object.keys(moviesByActorName).map((name) => ({ group: 1, id: name })),
-      ..._.uniq(flatten(Object.values(moviesByActorName))).map((name) => ({
+      ..._.uniq(_.flatten(Object.values(moviesByActorName))).map((name) => ({
         group: 2,
         id: name,
       })),
