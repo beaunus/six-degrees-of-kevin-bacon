@@ -30,7 +30,9 @@ export function getPersonCredits(...personIds: number[]) {
   )
     .then(_.flatten)
     .then((x) =>
-      x.map(({ cast }) => ({ cast: cast.filter((z) => z.popularity > 9.9) }))
+      x
+        .map(({ cast }) => ({ cast: cast.filter((z) => z.popularity > 9.9) }))
+        .filter(({ cast }) => cast.length)
     );
 }
 
