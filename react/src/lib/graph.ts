@@ -159,17 +159,15 @@ export function areActorsConnected(
 
 export function getLinksAndNodes(moviesByActorName: _.Dictionary<string[]>) {
   return {
-    links: [
-      ..._.flatMap(
-        Object.entries(moviesByActorName).map(([actorName, movieNames]) =>
-          movieNames.map((movieName) => ({
-            source: actorName,
-            target: movieName,
-            value: 1,
-          }))
-        )
-      ),
-    ],
+    links: _.flatMap(
+      Object.entries(moviesByActorName).map(([actorName, movieNames]) =>
+        movieNames.map((movieName) => ({
+          source: actorName,
+          target: movieName,
+          value: 1,
+        }))
+      )
+    ),
     nodes: [
       ...Object.keys(moviesByActorName).map((name) => ({ group: 1, id: name })),
       ..._.uniq(_.flatten(Object.values(moviesByActorName))).map((name) => ({
