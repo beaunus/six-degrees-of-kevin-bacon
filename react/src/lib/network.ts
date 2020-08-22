@@ -5,14 +5,14 @@ import MovieDB from "node-themoviedb";
 import qs from "qs";
 
 const BATCH_SIZE = 100;
-const URI = process.env.MOVIE_SERVICE_URL;
+const MOVIE_SERVICE_URL = process.env.MOVIE_SERVICE_URL;
 
 export function getMovieCredits(...movieIds: number[]) {
   return Promise.all(
     _.chunk(movieIds, BATCH_SIZE).map((movie_ids) =>
       axios
         .get<MovieDB.Responses.Movie.GetCredits[]>(
-          `${URI}/movie_credits?${qs.stringify({ movie_ids })}`
+          `${MOVIE_SERVICE_URL}/movie_credits?${qs.stringify({ movie_ids })}`
         )
         .then(({ data }) => data)
     )
@@ -24,7 +24,7 @@ export function getPersonCredits(...personIds: number[]) {
     _.chunk(personIds, BATCH_SIZE).map((person_ids) =>
       axios
         .get<MovieDB.Responses.Person.GetCombinedCredits[]>(
-          `${URI}/movies?${qs.stringify({ person_ids })}`
+          `${MOVIE_SERVICE_URL}/movies?${qs.stringify({ person_ids })}`
         )
         .then(({ data }) => data)
     )
@@ -43,7 +43,7 @@ export function getPersons(...actorsNames: string[]) {
     _.chunk(actorsNames, BATCH_SIZE).map((actor_names) =>
       axios
         .get<MovieDB.Objects.Person[]>(
-          `${URI}/persons?${qs.stringify({ actor_names })}`
+          `${MOVIE_SERVICE_URL}/persons?${qs.stringify({ actor_names })}`
         )
         .then(({ data }) => data)
     )
