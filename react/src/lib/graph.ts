@@ -146,9 +146,9 @@ export function areActorsConnected(
     );
 
     movieQueue.forEach((movieName) => visitedMovies.add(movieName));
-    movieQueue = _.flatten(
-      nextEntries.map(([, movieName]) => movieName)
-    ).filter((movieName) => !visitedMovies.has(movieName));
+    movieQueue = nextEntries
+      .flatMap(([, movieName]) => movieName)
+      .filter((movieName) => !visitedMovies.has(movieName));
     visitedActors.push(...nextEntries.map(([actorName]) => actorName));
 
     if (actorNames.every((actorName) => visitedActors.includes(actorName)))
