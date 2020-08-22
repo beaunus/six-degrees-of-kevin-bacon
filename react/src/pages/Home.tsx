@@ -10,16 +10,13 @@ import {
   IonPage,
   IonToolbar,
 } from "@ionic/react";
-import axios from "axios";
-import _, { flatMap, flatten, Dictionary } from "lodash";
+import _, { Dictionary, flatMap, flatten } from "lodash";
 import MovieDB from "node-themoviedb";
-import qs from "qs";
 import React, { useState } from "react";
 
 import Graph from "../components/Graph";
+import { getMovieCredits, getPersonCredits, getPersons } from "../lib/network";
 import "./Home.css";
-
-const URI = `http://localhost:3000/api`;
 
 const defaultGraph = { links: [], nodes: [] } as {
   links: { source: string; target: string; value: number }[];
@@ -135,46 +132,6 @@ async function getConnectedGraph(
     }
   }
   return moviesByActorName;
-}
-
-function getMovieCredits(...movieIds: number[]) {
-  return Promise.all(
-    _.chunk(movieIds, 100).map((movie_ids) =>
-      axios
-        .get<MovieDB.Responses.Movie.GetCredits[]>(
-          `${URI}/movie_credits?${qs.stringify({ movie_ids })}`
-        )
-        .then(({ data }) => data)
-    )
-  ).then(flatten);
-}
-
-function getPersonCredits(...personIds: number[]) {
-  return Promise.all(
-    _.chunk(personIds, 100).map((person_ids) =>
-      axios
-        .get<MovieDB.Responses.Person.GetCombinedCredits[]>(
-          `${URI}/movies?${qs.stringify({ person_ids })}`
-        )
-        .then(({ data }) => data)
-    )
-  )
-    .then(flatten)
-    .then((x) =>
-      x.map(({ cast }) => ({ cast: cast.filter((z) => z.popularity > 9.9) }))
-    );
-}
-
-function getPersons(...actorsNames: string[]) {
-  return Promise.all(
-    _.chunk(actorsNames, 100).map((actor_names) =>
-      axios
-        .get<MovieDB.Objects.Person[]>(
-          `${URI}/persons?${qs.stringify({ actor_names })}`
-        )
-        .then(({ data }) => data)
-    )
-  ).then(flatten);
 }
 
 function getPrevNodeByNode(
