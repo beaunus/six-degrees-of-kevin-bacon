@@ -11,7 +11,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import axios from "axios";
-import _, { flatMap, flatten } from "lodash";
+import _, { flatMap, flatten, Dictionary } from "lodash";
 import MovieDB from "node-themoviedb";
 import qs from "qs";
 import React, { useState } from "react";
@@ -119,7 +119,7 @@ async function getConnectedGraph(
         ...[...edgeMovies].map(({ id }) => id)
       );
       const edgeMoviesById = _.keyBy([...edgeMovies], "id");
-      const newMovieThing = {} as { [actorName: string]: Array<string> };
+      const newMovieThing = {} as { [actorName: string]: string[] };
       edgePersons.clear();
       movieCredits.forEach((credits) => {
         credits.cast.forEach(({ id, name }) => {
@@ -137,11 +137,11 @@ async function getConnectedGraph(
   return moviesByActorName;
 }
 
-function getMovieCredits(...movieIds: Array<number>) {
+function getMovieCredits(...movieIds: number[]) {
   return Promise.all(
     _.chunk(movieIds, 100).map((movie_ids) =>
       axios
-        .get<Array<MovieDB.Responses.Movie.GetCredits>>(
+        .get<MovieDB.Responses.Movie.GetCredits[]>(
           `${URI}/movie_credits?${qs.stringify({ movie_ids })}`
         )
         .then(({ data }) => data)
@@ -149,11 +149,11 @@ function getMovieCredits(...movieIds: Array<number>) {
   ).then(flatten);
 }
 
-function getPersonCredits(...personIds: Array<number>) {
+function getPersonCredits(...personIds: number[]) {
   return Promise.all(
     _.chunk(personIds, 100).map((person_ids) =>
       axios
-        .get<Array<MovieDB.Responses.Person.GetCombinedCredits>>(
+        .get<MovieDB.Responses.Person.GetCombinedCredits[]>(
           `${URI}/movies?${qs.stringify({ person_ids })}`
         )
         .then(({ data }) => data)
@@ -165,11 +165,11 @@ function getPersonCredits(...personIds: Array<number>) {
     );
 }
 
-function getPersons(...actorsNames: Array<string>) {
+function getPersons(...actorsNames: string[]) {
   return Promise.all(
     _.chunk(actorsNames, 100).map((actor_names) =>
       axios
-        .get<Array<MovieDB.Objects.Person>>(
+        .get<MovieDB.Objects.Person[]>(
           `${URI}/persons?${qs.stringify({ actor_names })}`
         )
         .then(({ data }) => data)
@@ -178,7 +178,7 @@ function getPersons(...actorsNames: Array<string>) {
 }
 
 function getPrevNodeByNode(
-  moviesByActorName: { [actorName: string]: string[] },
+  moviesByActorName: Dictionary<string[]>,
   actorNames: string[]
 ) {
   const graph = Object.entries(moviesByActorName).reduce(
@@ -216,12 +216,12 @@ function getPrevNodeByNode(
 }
 
 function trimGraph(
-  moviesByActorName: { [actorName: string]: Array<string> },
-  actorNames: Array<string>
+  moviesByActorName: Dictionary<string[]>,
+  actorNames: string[]
 ) {
   const prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
 
-  const trimmedMoviesByActorName = {} as { [actorName: string]: Array<string> };
+  const trimmedMoviesByActorName = {} as Dictionary<string[]>;
 
   let isActor = true;
   let queue = [actorNames[1]];
@@ -254,8 +254,8 @@ function trimGraph(
 }
 
 function areActorsConnected(
-  moviesByActorName: { [actorName: string]: Array<string> },
-  actorNames: Array<string>
+  moviesByActorName: Dictionary<string[]>,
+  actorNames: string[]
 ) {
   if (actorNames.length <= 1) return true;
   const visitedActors = [actorNames[0]];
@@ -281,9 +281,7 @@ function areActorsConnected(
   return false;
 }
 
-function getLinksAndNodes(moviesByActorName: {
-  [actorName: string]: Array<string>;
-}) {
+function getLinksAndNodes(moviesByActorName: Dictionary<string[]>) {
   return {
     links: [
       ...flatMap(
@@ -305,7 +303,5 @@ function getLinksAndNodes(moviesByActorName: {
     ],
   };
 }
-
-setTimeout(() => document.querySelector("ion-button")?.click(), 500);
 
 export default Home;
