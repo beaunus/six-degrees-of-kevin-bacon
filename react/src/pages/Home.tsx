@@ -277,7 +277,7 @@ function getPrevNodeByNode(
     {} as { [k: string]: Set<string> }
   );
 
-  let queue = [actorNames[0]];
+  const queue = [actorNames[0]];
 
   const prevNodeByNode = Object.fromEntries(
     Object.keys(graph).map((node) => [node, new Set<string>()])
