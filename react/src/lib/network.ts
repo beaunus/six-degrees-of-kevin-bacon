@@ -4,7 +4,7 @@ import _ from "lodash";
 import MovieDB from "node-themoviedb";
 import qs from "qs";
 
-const URI = "http://localhost:3000/api";
+const URI = process.env.MOVIE_SERVICE_URL;
 
 export function getMovieCredits(...movieIds: number[]) {
   return Promise.all(
