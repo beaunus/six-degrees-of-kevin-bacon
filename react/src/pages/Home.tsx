@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   IonButton,
   IonContent,
@@ -214,7 +215,7 @@ const Home: React.FC = () => {
     </IonPage>
   );
 
-  async function getMovieCredits(...movieIds: Array<number>) {
+  function getMovieCredits(...movieIds: Array<number>) {
     return Promise.all(
       _.chunk(movieIds, 100).map((movie_ids) =>
         axios
@@ -226,7 +227,7 @@ const Home: React.FC = () => {
     ).then(flatten);
   }
 
-  async function getPersonCredits(...personIds: Array<number>) {
+  function getPersonCredits(...personIds: Array<number>) {
     return Promise.all(
       _.chunk(personIds, 100).map((person_ids) =>
         axios
@@ -242,7 +243,7 @@ const Home: React.FC = () => {
       );
   }
 
-  async function getPersons(...actorsNames: Array<string>) {
+  function getPersons(...actorsNames: Array<string>) {
     return Promise.all(
       _.chunk(actorsNames, 100).map((actor_names) =>
         axios
