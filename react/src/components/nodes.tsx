@@ -24,6 +24,7 @@ const Nodes: React.FC<{
 }> = ({ nodes, simulation }) => {
   useEffect(() => {
     d3.selectAll<Element, D3Node>(".node").call(
+      /* eslint-disable no-param-reassign */
       d3
         .drag<Element, D3Node>()
         .on("start", (d) => {
@@ -40,6 +41,7 @@ const Nodes: React.FC<{
           d.fx = null;
           d.fy = null;
         })
+      /* eslint-enable no-param-reassign */
     );
   });
 
