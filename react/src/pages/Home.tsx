@@ -26,8 +26,6 @@ const Home: React.FC = () => {
   const [actorNames, setActorNames] = useState(["Al Pacino", "Robert DeNiro"]);
   const [graph, setGraph] = useState(defaultGraph);
 
-  const { links, nodes } = graph;
-
   return (
     <IonPage>
       <IonHeader>
@@ -59,7 +57,7 @@ const Home: React.FC = () => {
         <IonButton expand="full" onClick={handleGoClick}>
           GO
         </IonButton>
-        <Graph links={links} nodes={nodes} />
+        <Graph {...graph} />
       </IonContent>
     </IonPage>
   );
