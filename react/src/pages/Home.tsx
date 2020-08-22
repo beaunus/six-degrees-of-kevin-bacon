@@ -78,14 +78,14 @@ function trimGraph(
   moviesByActorName: { [actorName: string]: Array<string> },
   actorNames: Array<string>
 ) {
-  var prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
+  const prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
 
   const trimmedMoviesByActorName = {} as { [actorName: string]: Array<string> };
 
   let isActor = true;
   let queue = [actorNames[1]];
   while (queue.length) {
-    let next = Array<string>();
+    const next = Array<string>();
     if (isActor) {
       while (queue.length) {
         const current = queue.shift() as string;
