@@ -167,13 +167,12 @@ const Home: React.FC = () => {
     );
     setGraph(getLinksAndNodes(moviesByActorName));
     const realActorNames = persons.map(({ name }) => name);
-    setGraph(
-      getLinksAndNodes(
-        trimGraph(
-          await getConnectedGraph(persons, moviesByActorName, realActorNames),
-          realActorNames
-        )
-      )
+    return getConnectedGraph(
+      persons,
+      moviesByActorName,
+      realActorNames
+    ).then((connectedGraph) =>
+      setGraph(getLinksAndNodes(trimGraph(connectedGraph, realActorNames)))
     );
   }
 };
