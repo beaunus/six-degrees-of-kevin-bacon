@@ -120,11 +120,11 @@ const defaultGraph = { links: [], nodes: [] } as {
 const Home: React.FC = () => {
   const [actorNames, setActorNames] = useState(["Al Pacino", "Robert DeNiro"]);
   const [graph, setGraph] = useState(defaultGraph);
-  let moviesByActorName: { [actorName: string]: Array<string> };
 
   const { links, nodes } = graph;
 
   const handleGoClick = async () => {
+    let moviesByActorName: { [actorName: string]: Array<string> };
     setGraph(defaultGraph);
     const persons = await getPersons(...actorNames);
     moviesByActorName = Object.fromEntries(
@@ -175,7 +175,7 @@ const Home: React.FC = () => {
           });
         });
         edgeMovies.clear();
-        moviesByActorName = _.merge(moviesByActorName, newMovieThing);
+        moviesByActorName = _.merge({}, moviesByActorName, newMovieThing);
       }
     }
     setGraph(getLinksAndNodes(trimGraph(moviesByActorName, realActorNames)));
