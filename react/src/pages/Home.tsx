@@ -123,63 +123,6 @@ const Home: React.FC = () => {
 
   const { links, nodes } = graph;
 
-  const handleGoClick = async () => {
-    let moviesByActorName: { [actorName: string]: Array<string> };
-    setGraph(defaultGraph);
-    const persons = await getPersons(...actorNames);
-    moviesByActorName = Object.fromEntries(
-      persons.map(({ name }) => [name, []])
-    );
-    setGraph(getLinksAndNodes(moviesByActorName));
-    const edgePersons = new Set<{ id: number; name: string }>(persons);
-    const edgeMovies = new Set<{ id: number; name: string; title: string }>();
-    const realActorNames = persons.map(({ name }) => name);
-
-    while (!areActorsConnected(moviesByActorName, realActorNames)) {
-      if (edgePersons.size) {
-        const personCredits = await getPersonCredits(
-          ...[...edgePersons].map(({ id }) => id)
-        );
-        moviesByActorName = {
-          ...moviesByActorName,
-          ...Object.fromEntries(
-            [...edgePersons].map(({ name }, index) => [
-              name,
-              personCredits[index].cast
-                .map(({ title }) => title)
-                .filter(Boolean),
-            ])
-          ),
-        };
-
-        edgeMovies.clear();
-        personCredits.forEach(({ cast }) =>
-          cast.forEach((x) => edgeMovies.add(x))
-        );
-        edgePersons.clear();
-      } else {
-        const movieCredits = await getMovieCredits(
-          ...[...edgeMovies].map(({ id }) => id)
-        );
-        const edgeMoviesById = _.keyBy([...edgeMovies], "id");
-        const newMovieThing = {} as { [actorName: string]: Array<string> };
-        edgePersons.clear();
-        movieCredits.forEach((credits) => {
-          credits.cast.forEach(({ id, name }) => {
-            newMovieThing[name] = newMovieThing[name] || [];
-            newMovieThing[name].push(
-              edgeMoviesById[credits.id].title ||
-                edgeMoviesById[credits.id].name
-            );
-            edgePersons.add({ id, name });
-          });
-        });
-        edgeMovies.clear();
-        moviesByActorName = _.merge({}, moviesByActorName, newMovieThing);
-      }
-    }
-    setGraph(getLinksAndNodes(trimGraph(moviesByActorName, realActorNames)));
-  };
   return (
     <IonPage>
       <IonHeader>
@@ -216,46 +159,115 @@ const Home: React.FC = () => {
     </IonPage>
   );
 
-  function getMovieCredits(...movieIds: Array<number>) {
-    return Promise.all(
-      _.chunk(movieIds, 100).map((movie_ids) =>
-        axios
-          .get<Array<MovieDB.Responses.Movie.GetCredits>>(
-            `${URI}/movie_credits?${qs.stringify({ movie_ids })}`
-          )
-          .then(({ data }) => data)
+  async function handleGoClick() {
+    setGraph(defaultGraph);
+    const persons = await getPersons(...actorNames);
+    const moviesByActorName = Object.fromEntries(
+      persons.map(({ name }) => [name, Array<string>()])
+    );
+    setGraph(getLinksAndNodes(moviesByActorName));
+    const realActorNames = persons.map(({ name }) => name);
+    setGraph(
+      getLinksAndNodes(
+        trimGraph(
+          await getConnectedGraph(persons, moviesByActorName, realActorNames),
+          realActorNames
+        )
       )
-    ).then(flatten);
-  }
-
-  function getPersonCredits(...personIds: Array<number>) {
-    return Promise.all(
-      _.chunk(personIds, 100).map((person_ids) =>
-        axios
-          .get<Array<MovieDB.Responses.Person.GetCombinedCredits>>(
-            `${URI}/movies?${qs.stringify({ person_ids })}`
-          )
-          .then(({ data }) => data)
-      )
-    )
-      .then(flatten)
-      .then((x) =>
-        x.map(({ cast }) => ({ cast: cast.filter((z) => z.popularity > 9.9) }))
-      );
-  }
-
-  function getPersons(...actorsNames: Array<string>) {
-    return Promise.all(
-      _.chunk(actorsNames, 100).map((actor_names) =>
-        axios
-          .get<Array<MovieDB.Objects.Person>>(
-            `${URI}/persons?${qs.stringify({ actor_names })}`
-          )
-          .then(({ data }) => data)
-      )
-    ).then(flatten);
+    );
   }
 };
+
+async function getConnectedGraph(
+  persons: MovieDB.Objects.Person[],
+  moviesByActorName: { [actorName: string]: string[] },
+  realActorNames: string[]
+) {
+  const edgePersons = new Set<{ id: number; name: string }>(persons);
+  const edgeMovies = new Set<{ id: number; name: string; title: string }>();
+
+  while (!areActorsConnected(moviesByActorName, realActorNames)) {
+    if (edgePersons.size) {
+      const personCredits = await getPersonCredits(
+        ...[...edgePersons].map(({ id }) => id)
+      );
+      moviesByActorName = {
+        ...moviesByActorName,
+        ...Object.fromEntries(
+          [...edgePersons].map(({ name }, index) => [
+            name,
+            personCredits[index].cast.map(({ title }) => title).filter(Boolean),
+          ])
+        ),
+      };
+
+      edgeMovies.clear();
+      personCredits.forEach(({ cast }) =>
+        cast.forEach((x) => edgeMovies.add(x))
+      );
+      edgePersons.clear();
+    } else {
+      const movieCredits = await getMovieCredits(
+        ...[...edgeMovies].map(({ id }) => id)
+      );
+      const edgeMoviesById = _.keyBy([...edgeMovies], "id");
+      const newMovieThing = {} as { [actorName: string]: Array<string> };
+      edgePersons.clear();
+      movieCredits.forEach((credits) => {
+        credits.cast.forEach(({ id, name }) => {
+          newMovieThing[name] = newMovieThing[name] || [];
+          newMovieThing[name].push(
+            edgeMoviesById[credits.id].title || edgeMoviesById[credits.id].name
+          );
+          edgePersons.add({ id, name });
+        });
+      });
+      edgeMovies.clear();
+      moviesByActorName = _.merge({}, moviesByActorName, newMovieThing);
+    }
+  }
+  return moviesByActorName;
+}
+
+function getMovieCredits(...movieIds: Array<number>) {
+  return Promise.all(
+    _.chunk(movieIds, 100).map((movie_ids) =>
+      axios
+        .get<Array<MovieDB.Responses.Movie.GetCredits>>(
+          `${URI}/movie_credits?${qs.stringify({ movie_ids })}`
+        )
+        .then(({ data }) => data)
+    )
+  ).then(flatten);
+}
+
+function getPersonCredits(...personIds: Array<number>) {
+  return Promise.all(
+    _.chunk(personIds, 100).map((person_ids) =>
+      axios
+        .get<Array<MovieDB.Responses.Person.GetCombinedCredits>>(
+          `${URI}/movies?${qs.stringify({ person_ids })}`
+        )
+        .then(({ data }) => data)
+    )
+  )
+    .then(flatten)
+    .then((x) =>
+      x.map(({ cast }) => ({ cast: cast.filter((z) => z.popularity > 9.9) }))
+    );
+}
+
+function getPersons(...actorsNames: Array<string>) {
+  return Promise.all(
+    _.chunk(actorsNames, 100).map((actor_names) =>
+      axios
+        .get<Array<MovieDB.Objects.Person>>(
+          `${URI}/persons?${qs.stringify({ actor_names })}`
+        )
+        .then(({ data }) => data)
+    )
+  ).then(flatten);
+}
 
 setTimeout(() => document.querySelector("ion-button")?.click(), 500);
 
