@@ -21,97 +21,6 @@ import "./Home.css";
 
 const URI = `http://localhost:3000/api`;
 
-function getLinksAndNodes(moviesByActorName: {
-  [actorName: string]: Array<string>;
-}) {
-  return {
-    links: [
-      ...flatMap(
-        Object.entries(moviesByActorName).map(([actorName, movieNames]) =>
-          movieNames.map((movieName) => ({
-            source: actorName,
-            target: movieName,
-            value: 1,
-          }))
-        )
-      ),
-    ],
-    nodes: [
-      ...Object.keys(moviesByActorName).map((name) => ({ group: 1, id: name })),
-      ..._.uniq(flatten(Object.values(moviesByActorName))).map((name) => ({
-        group: 2,
-        id: name,
-      })),
-    ],
-  };
-}
-
-function areActorsConnected(
-  moviesByActorName: { [actorName: string]: Array<string> },
-  actorNames: Array<string>
-) {
-  if (actorNames.length <= 1) return true;
-  const visitedActors = [actorNames[0]];
-  const visitedMovies = new Set<string>();
-  let movieQueue = moviesByActorName[actorNames[0]];
-
-  while (movieQueue.length) {
-    const nextEntries = Object.entries(moviesByActorName).filter(
-      ([actorName, movieNames]) =>
-        !visitedActors.includes(actorName) &&
-        movieNames.some((movieName) => movieQueue.includes(movieName))
-    );
-
-    movieQueue.forEach((movieName) => visitedMovies.add(movieName));
-    movieQueue = flatten(nextEntries.map(([, movieName]) => movieName)).filter(
-      (movieName) => !visitedMovies.has(movieName)
-    );
-    visitedActors.push(...nextEntries.map(([actorName]) => actorName));
-
-    if (actorNames.every((actorName) => visitedActors.includes(actorName)))
-      return true;
-  }
-  return false;
-}
-
-function trimGraph(
-  moviesByActorName: { [actorName: string]: Array<string> },
-  actorNames: Array<string>
-) {
-  const prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
-
-  const trimmedMoviesByActorName = {} as { [actorName: string]: Array<string> };
-
-  let isActor = true;
-  let queue = [actorNames[1]];
-  while (queue.length) {
-    const next = Array<string>();
-    if (isActor) {
-      while (queue.length) {
-        const current = queue.shift() as string;
-        next.push(...prevNodeByNode[current]);
-        trimmedMoviesByActorName[current] =
-          trimmedMoviesByActorName[current] || [];
-        trimmedMoviesByActorName[current].push(...prevNodeByNode[current]);
-      }
-    } else {
-      while (queue.length) {
-        const current = queue.shift() as string;
-        prevNodeByNode[current].forEach((actorName) => {
-          trimmedMoviesByActorName[actorName] =
-            trimmedMoviesByActorName[actorName] || [];
-          trimmedMoviesByActorName[actorName].push(current);
-          next.push(actorName);
-        });
-      }
-    }
-    queue = next;
-    isActor = !isActor;
-  }
-
-  return trimmedMoviesByActorName;
-}
-
 const defaultGraph = { links: [], nodes: [] } as {
   links: { source: string; target: string; value: number }[];
   nodes: { group: number; id: string }[];
@@ -268,10 +177,6 @@ function getPersons(...actorsNames: Array<string>) {
   ).then(flatten);
 }
 
-setTimeout(() => document.querySelector("ion-button")?.click(), 500);
-
-export default Home;
-
 function getPrevNodeByNode(
   moviesByActorName: { [actorName: string]: string[] },
   actorNames: string[]
@@ -309,3 +214,98 @@ function getPrevNodeByNode(
   }
   return prevNodeByNode;
 }
+
+function trimGraph(
+  moviesByActorName: { [actorName: string]: Array<string> },
+  actorNames: Array<string>
+) {
+  const prevNodeByNode = getPrevNodeByNode(moviesByActorName, actorNames);
+
+  const trimmedMoviesByActorName = {} as { [actorName: string]: Array<string> };
+
+  let isActor = true;
+  let queue = [actorNames[1]];
+  while (queue.length) {
+    const next = Array<string>();
+    if (isActor) {
+      while (queue.length) {
+        const current = queue.shift() as string;
+        next.push(...prevNodeByNode[current]);
+        trimmedMoviesByActorName[current] =
+          trimmedMoviesByActorName[current] || [];
+        trimmedMoviesByActorName[current].push(...prevNodeByNode[current]);
+      }
+    } else {
+      while (queue.length) {
+        const current = queue.shift() as string;
+        prevNodeByNode[current].forEach((actorName) => {
+          trimmedMoviesByActorName[actorName] =
+            trimmedMoviesByActorName[actorName] || [];
+          trimmedMoviesByActorName[actorName].push(current);
+          next.push(actorName);
+        });
+      }
+    }
+    queue = next;
+    isActor = !isActor;
+  }
+
+  return trimmedMoviesByActorName;
+}
+
+function areActorsConnected(
+  moviesByActorName: { [actorName: string]: Array<string> },
+  actorNames: Array<string>
+) {
+  if (actorNames.length <= 1) return true;
+  const visitedActors = [actorNames[0]];
+  const visitedMovies = new Set<string>();
+  let movieQueue = moviesByActorName[actorNames[0]];
+
+  while (movieQueue.length) {
+    const nextEntries = Object.entries(moviesByActorName).filter(
+      ([actorName, movieNames]) =>
+        !visitedActors.includes(actorName) &&
+        movieNames.some((movieName) => movieQueue.includes(movieName))
+    );
+
+    movieQueue.forEach((movieName) => visitedMovies.add(movieName));
+    movieQueue = flatten(nextEntries.map(([, movieName]) => movieName)).filter(
+      (movieName) => !visitedMovies.has(movieName)
+    );
+    visitedActors.push(...nextEntries.map(([actorName]) => actorName));
+
+    if (actorNames.every((actorName) => visitedActors.includes(actorName)))
+      return true;
+  }
+  return false;
+}
+
+function getLinksAndNodes(moviesByActorName: {
+  [actorName: string]: Array<string>;
+}) {
+  return {
+    links: [
+      ...flatMap(
+        Object.entries(moviesByActorName).map(([actorName, movieNames]) =>
+          movieNames.map((movieName) => ({
+            source: actorName,
+            target: movieName,
+            value: 1,
+          }))
+        )
+      ),
+    ],
+    nodes: [
+      ...Object.keys(moviesByActorName).map((name) => ({ group: 1, id: name })),
+      ..._.uniq(flatten(Object.values(moviesByActorName))).map((name) => ({
+        group: 2,
+        id: name,
+      })),
+    ],
+  };
+}
+
+setTimeout(() => document.querySelector("ion-button")?.click(), 500);
+
+export default Home;
