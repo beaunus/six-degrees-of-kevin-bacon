@@ -1,5 +1,6 @@
 import _ from "lodash";
 import MovieDB from "node-themoviedb";
+
 import { getMovieCredits, getPersonCredits } from "./network";
 
 export async function getConnectedGraph(
@@ -10,13 +11,15 @@ export async function getConnectedGraph(
   const edgePersons = new Set<{ id: number; name: string }>(persons);
   const edgeMovies = new Set<{ id: number; name: string; title: string }>();
 
-  while (!areActorsConnected(moviesByActorName, realActorNames)) {
+  let result = moviesByActorName;
+
+  while (!areActorsConnected(result, realActorNames)) {
     if (edgePersons.size) {
       const personCredits = await getPersonCredits(
         ...[...edgePersons].map(({ id }) => id)
       );
-      moviesByActorName = {
-        ...moviesByActorName,
+      result = {
+        ...result,
         ...Object.fromEntries(
           [...edgePersons].map(({ name }, index) => [
             name,
@@ -47,10 +50,10 @@ export async function getConnectedGraph(
         });
       });
       edgeMovies.clear();
-      moviesByActorName = _.merge({}, moviesByActorName, newMovieThing);
+      result = _.merge({}, result, newMovieThing);
     }
   }
-  return moviesByActorName;
+  return result;
 }
 
 export function getPrevNodeByNode(
@@ -59,15 +62,16 @@ export function getPrevNodeByNode(
 ) {
   const graph = Object.entries(moviesByActorName).reduce(
     (acc, [actorName, movieNames]) => {
-      acc[actorName] = acc[actorName] || new Set();
+      const result = { ...acc };
+      result[actorName] = result[actorName] || new Set();
       movieNames.forEach((movieName) => {
-        acc[actorName].add(movieName);
-        acc[movieName] = acc[movieName] || new Set();
-        acc[movieName].add(actorName);
+        result[actorName].add(movieName);
+        result[movieName] = result[movieName] || new Set();
+        result[movieName].add(actorName);
       });
-      return acc;
+      return result;
     },
-    {} as { [k: string]: Set<string> }
+    {} as _.Dictionary<Set<string>>
   );
 
   const queue = [actorNames[0]];
