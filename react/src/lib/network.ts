@@ -4,11 +4,12 @@ import _ from "lodash";
 import MovieDB from "node-themoviedb";
 import qs from "qs";
 
+const BATCH_SIZE = 100;
 const URI = process.env.MOVIE_SERVICE_URL;
 
 export function getMovieCredits(...movieIds: number[]) {
   return Promise.all(
-    _.chunk(movieIds, 100).map((movie_ids) =>
+    _.chunk(movieIds, BATCH_SIZE).map((movie_ids) =>
       axios
         .get<MovieDB.Responses.Movie.GetCredits[]>(
           `${URI}/movie_credits?${qs.stringify({ movie_ids })}`
@@ -20,7 +21,7 @@ export function getMovieCredits(...movieIds: number[]) {
 
 export function getPersonCredits(...personIds: number[]) {
   return Promise.all(
-    _.chunk(personIds, 100).map((person_ids) =>
+    _.chunk(personIds, BATCH_SIZE).map((person_ids) =>
       axios
         .get<MovieDB.Responses.Person.GetCombinedCredits[]>(
           `${URI}/movies?${qs.stringify({ person_ids })}`
@@ -39,7 +40,7 @@ export function getPersonCredits(...personIds: number[]) {
 
 export function getPersons(...actorsNames: string[]) {
   return Promise.all(
-    _.chunk(actorsNames, 100).map((actor_names) =>
+    _.chunk(actorsNames, BATCH_SIZE).map((actor_names) =>
       axios
         .get<MovieDB.Objects.Person[]>(
           `${URI}/persons?${qs.stringify({ actor_names })}`
