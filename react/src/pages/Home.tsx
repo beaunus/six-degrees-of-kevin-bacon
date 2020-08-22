@@ -261,4 +261,6 @@ function getLinksAndNodes(moviesByActorName: Dictionary<string[]>) {
   };
 }
 
+setTimeout(() => document.querySelector("ion-button")?.click(), 500);
+
 export default Home;
