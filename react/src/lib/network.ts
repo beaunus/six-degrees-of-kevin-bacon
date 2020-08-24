@@ -4,33 +4,49 @@ import _ from "lodash";
 import MovieDB from "node-themoviedb";
 import qs from "qs";
 
-const BATCH_SIZE = 100;
-const MOVIE_SERVICE_URL = process.env.MOVIE_SERVICE_URL;
+const THE_MOVIE_DB_URL = process.env.THE_MOVIE_DB_URL;
+const THE_MOVIE_DB_API_KEY = process.env.THE_MOVIE_DB_API_KEY;
+const THE_MOVIE_DB_API_READ_ACCESS_TOKEN =
+  process.env.THE_MOVIE_DB_API_READ_ACCESS_TOKEN;
+
+function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
+  return axios
+    .get<T>(
+      `${THE_MOVIE_DB_URL}${path}?${qs.stringify({
+        ...query,
+        api_key: THE_MOVIE_DB_API_KEY,
+      })}`,
+      {
+        headers: {
+          Authorization: `Bearer ${THE_MOVIE_DB_API_READ_ACCESS_TOKEN}`,
+        },
+      }
+    )
+    .then(({ data }) => data)
+    .catch(() => (null as unknown) as T);
+}
 
 export function getMovieCredits(...movieIds: number[]) {
   return Promise.all(
-    _.chunk(movieIds, BATCH_SIZE).map((movie_ids) =>
-      axios
-        .get<MovieDB.Responses.Movie.GetCredits[]>(
-          `${MOVIE_SERVICE_URL}/movie_credits?${qs.stringify({ movie_ids })}`
-        )
-        .then(({ data }) => data)
+    movieIds.map((movieId) =>
+      requestTheMovieDB<MovieDB.Responses.Movie.GetCredits[]>(
+        `/movie/${movieId}/credits`
+      )
     )
-  ).then((batches) => batches.flat());
+  ).then((results) => results.filter(Boolean));
 }
 
 export function getPersonCredits(...personIds: number[]) {
   return Promise.all(
-    _.chunk(personIds, BATCH_SIZE).map((person_ids) =>
-      axios
-        .get<MovieDB.Responses.Person.GetCombinedCredits[]>(
-          `${MOVIE_SERVICE_URL}/movies?${qs.stringify({ person_ids })}`
-        )
-        .then(({ data }) => data)
+    personIds.map((personId) =>
+      requestTheMovieDB<MovieDB.Responses.Person.GetCombinedCredits[]>(
+        `/person/${personId}/combined_credits`
+      )
     )
-  ).then((batches) =>
-    batches
+  ).then((data) =>
+    data
       .flat()
+      .filter(Boolean)
       .map(({ cast }) => ({
         cast: cast.filter(({ popularity }) => popularity > 9.9),
       }))
@@ -40,12 +56,10 @@ export function getPersonCredits(...personIds: number[]) {
 
 export function getPersons(...actorsNames: string[]) {
   return Promise.all(
-    _.chunk(actorsNames, BATCH_SIZE).map((actor_names) =>
-      axios
-        .get<MovieDB.Objects.Person[]>(
-          `${MOVIE_SERVICE_URL}/persons?${qs.stringify({ actor_names })}`
-        )
-        .then(({ data }) => data)
+    actorsNames.map((actorName) =>
+      requestTheMovieDB<MovieDB.Responses.Search.People>("/search/person", {
+        query: actorName,
+      }).then(({ results }) => results[0])
     )
-  ).then((batches) => batches.flat());
+  );
 }
