@@ -29,7 +29,7 @@ function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
 export function getMovieCredits(...movieIds: number[]) {
   return Promise.all(
     movieIds.map((movieId) =>
-      requestTheMovieDB<MovieDB.Responses.Movie.GetCredits[]>(
+      requestTheMovieDB<MovieDB.Responses.Movie.GetCredits>(
         `/movie/${movieId}/credits`
       )
     )
