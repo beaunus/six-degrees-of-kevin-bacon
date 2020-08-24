@@ -38,7 +38,8 @@ export async function getConnectedGraph(
       edgePersons.clear();
     } else {
       const movieCredits = await getMovieCredits(
-        [...edgeMovies].map(({ id }) => id)
+        [...edgeMovies].map(({ id }) => id),
+        { maxOrder: 10 }
       );
       const edgeMoviesById = _.keyBy([...edgeMovies], "id");
       const newMovieThing = {} as { [actorName: string]: string[] };
