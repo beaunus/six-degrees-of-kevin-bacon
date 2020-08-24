@@ -64,7 +64,7 @@ const Home: React.FC = () => {
 
   async function handleGoClick() {
     setGraph(defaultGraph);
-    const persons = await getPersons(...actorNames);
+    const persons = await getPersons(actorNames);
     const moviesByActorName = Object.fromEntries(
       persons.map(({ name }) => [name, Array<string>()])
     );

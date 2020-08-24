@@ -16,14 +16,16 @@ export async function getConnectedGraph(
   while (!areActorsConnected(result, realActorNames)) {
     if (edgePersons.size) {
       const personCredits = await getPersonCredits(
-        ...[...edgePersons].map(({ id }) => id)
+        [...edgePersons].map(({ id }) => id)
       );
       result = {
         ...result,
         ...Object.fromEntries(
           [...edgePersons].map(({ name }, index) => [
             name,
-            personCredits[index].cast.map(({ title }) => title).filter(Boolean),
+            personCredits[index]?.cast
+              .map(({ title }) => title)
+              .filter(Boolean),
           ])
         ),
       };
@@ -35,7 +37,7 @@ export async function getConnectedGraph(
       edgePersons.clear();
     } else {
       const movieCredits = await getMovieCredits(
-        ...[...edgeMovies].map(({ id }) => id)
+        [...edgeMovies].map(({ id }) => id)
       );
       const edgeMoviesById = _.keyBy([...edgeMovies], "id");
       const newMovieThing = {} as { [actorName: string]: string[] };
@@ -64,7 +66,7 @@ export function getPrevNodeByNode(
     (acc, [actorName, movieNames]) => {
       const result = { ...acc };
       result[actorName] = result[actorName] || new Set();
-      movieNames.forEach((movieName) => {
+      movieNames?.forEach((movieName) => {
         result[actorName].add(movieName);
         result[movieName] = result[movieName] || new Set();
         result[movieName].add(actorName);
@@ -146,7 +148,7 @@ export function areActorsConnected(
     const nextEntries = Object.entries(moviesByActorName).filter(
       ([actorName, movieNames]) =>
         !visitedActors.includes(actorName) &&
-        movieNames.some((movieName) => movieQueue.includes(movieName))
+        movieNames?.some((movieName) => movieQueue.includes(movieName))
     );
 
     movieQueue.forEach((movieName) => visitedMovies.add(movieName));

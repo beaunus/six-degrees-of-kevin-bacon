@@ -26,7 +26,7 @@ function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
     .catch(() => (null as unknown) as T);
 }
 
-export function getMovieCredits(...movieIds: number[]) {
+export function getMovieCredits(movieIds: number[]) {
   return Promise.all(
     movieIds.map((movieId) =>
       requestTheMovieDB<MovieDB.Responses.Movie.GetCredits>(
@@ -36,7 +36,10 @@ export function getMovieCredits(...movieIds: number[]) {
   ).then((results) => results.filter(Boolean));
 }
 
-export function getPersonCredits(...personIds: number[]) {
+export function getPersonCredits(
+  personIds: number[],
+  options?: { minPopularity?: number }
+) {
   return Promise.all(
     personIds.map((personId) =>
       requestTheMovieDB<MovieDB.Responses.Person.GetCombinedCredits[]>(
@@ -48,13 +51,15 @@ export function getPersonCredits(...personIds: number[]) {
       .flat()
       .filter(Boolean)
       .map(({ cast }) => ({
-        cast: cast.filter(({ popularity }) => popularity > 9.9),
+        cast: cast.filter(({ popularity }) =>
+          options?.minPopularity ? popularity > options.minPopularity : true
+        ),
       }))
       .filter(({ cast }) => cast.length)
   );
 }
 
-export function getPersons(...actorsNames: string[]) {
+export function getPersons(actorsNames: string[]) {
   return Promise.all(
     actorsNames.map((actorName) =>
       requestTheMovieDB<MovieDB.Responses.Search.People>("/search/person", {
