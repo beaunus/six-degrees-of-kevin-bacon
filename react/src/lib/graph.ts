@@ -16,7 +16,8 @@ export async function getConnectedGraph(
   while (!areActorsConnected(result, realActorNames)) {
     if (edgePersons.size) {
       const personCredits = await getPersonCredits(
-        [...edgePersons].map(({ id }) => id)
+        [...edgePersons].map(({ id }) => id),
+        { minPopularity: 30 }
       );
       result = {
         ...result,
