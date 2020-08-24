@@ -25,8 +25,8 @@ const defaultGraph = { links: [], nodes: [] } as {
 const Home: React.FC = () => {
   const [actorNames, setActorNames] = useState(["Al Pacino", "Jim Carrey"]);
   const [graph, setGraph] = useState(defaultGraph);
-  const [minMoviePopularity, setMinMoviePopularity] = useState<number>();
-  const [maxCastPosition, setMaxCastPosition] = useState<number>();
+  const [minMoviePopularity, setMinMoviePopularity] = useState(30);
+  const [maxCastPosition, setMaxCastPosition] = useState(10);
 
   return (
     <IonPage>
@@ -56,20 +56,21 @@ const Home: React.FC = () => {
             />
           </IonItem>
           <IonItem>
-            <IonLabel position="floating">
-              Minimum Movie Popularity (up to 30)
-            </IonLabel>
+            <IonLabel position="floating">Minimum Movie Popularity</IonLabel>
             <IonInput
-              clearInput
+              max="30"
+              min="0"
               onIonChange={(e) => setMinMoviePopularity(Number(e.detail.value))}
+              type="number"
               value={minMoviePopularity}
             />
           </IonItem>
           <IonItem>
             <IonLabel position="floating">Maximum Cast Position</IonLabel>
             <IonInput
-              clearInput
+              min="0"
               onIonChange={(e) => setMaxCastPosition(Number(e.detail.value))}
+              type="number"
               value={maxCastPosition}
             />
           </IonItem>
