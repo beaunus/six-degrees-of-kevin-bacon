@@ -6,7 +6,8 @@ import { getMovieCredits, getPersonCredits } from "./network";
 export async function getConnectedGraph(
   persons: MovieDB.Objects.Person[],
   moviesByActorName: { [actorName: string]: string[] },
-  realActorNames: string[]
+  realActorNames: string[],
+  options?: { maxCastPosition?: number; minMoviePopularity?: number }
 ) {
   const edgePersons = new Set<{ id: number; name: string }>(persons);
   const edgeMovies = new Set<{ id: number; name: string; title: string }>();
@@ -17,7 +18,7 @@ export async function getConnectedGraph(
     if (edgePersons.size) {
       const personCredits = await getPersonCredits(
         [...edgePersons].map(({ id }) => id),
-        { minPopularity: 30 }
+        { minPopularity: options?.minMoviePopularity }
       );
       result = {
         ...result,
@@ -39,7 +40,7 @@ export async function getConnectedGraph(
     } else {
       const movieCredits = await getMovieCredits(
         [...edgeMovies].map(({ id }) => id),
-        { maxOrder: 10 }
+        { maxOrder: options?.maxCastPosition }
       );
       const edgeMoviesById = _.keyBy([...edgeMovies], "id");
       const newMovieThing = {} as { [actorName: string]: string[] };
