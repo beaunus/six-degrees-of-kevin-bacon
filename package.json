@@ -11,7 +11,7 @@
     "dev": "webpack-dev-server --mode development --open --hot",
     "lint": "eslint **/src/**/*.{ts,tsx} --fix",
     "start": "webpack-dev-server --port $PORT --host 0.0.0.0",
-    "test": "jest" 
+    "test": "jest"
   },
   "license": "MIT",
   "devDependencies": {
@@ -56,7 +56,6 @@
     "lint-staged": "^10.1.3",
     "node-themoviedb": "^0.2.4",
     "prettier": "^2.0.4",
-    "react-scripts": "3.4.3",
     "style-loader": "^1.0.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",
