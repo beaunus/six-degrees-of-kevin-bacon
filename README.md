@@ -66,7 +66,7 @@ yarn start
 npm start
 ```
 
-Once the server is running on your machine, you should be able to navigate to `localhost:1337` and see the app in action. Enter the actor names, press submit and enjoy the magic. Have fun!
+Once the server is running on your machine, you should be able to navigate to `localhost:8080` and see the app in action. Enter the actor names, press submit and enjoy the magic. Have fun!
 
 ## Contributing
 
