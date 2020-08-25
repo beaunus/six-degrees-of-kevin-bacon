@@ -8,8 +8,9 @@
     "build": "webpack --mode production",
     "bundle": "webpack",
     "check-types": "tsc",
+    "dev": "webpack-dev-server --mode development --open --hot",
     "lint": "eslint **/src/**/*.{ts,tsx} --fix",
-    "start": "webpack-dev-server --mode development --open --hot",
+    "start": "webpack-dev-server --port $PORT --host 0.0.0.0",
     "test": "jest"
   },
   "license": "MIT",
