@@ -24,6 +24,8 @@ import { getConnectedGraph, getLinksAndNodes, trimGraph } from "../lib/graph";
 import { getPersons } from "../lib/network";
 import "./Home.css";
 
+const ENTER_KEY_CODE = 13;
+
 const defaultGraph = { links: [], nodes: [] } as {
   links: { source: string; target: string; value: number }[];
   nodes: { group: number; id: string }[];
@@ -52,6 +54,7 @@ const Home: React.FC = () => {
                 onIonChange={(e) =>
                   setActorNames([e.detail.value || "", ...actorNames.slice(1)])
                 }
+                onKeyPress={handleKeyPress}
                 value={actorNames[0]}
               />
             </IonItem>
@@ -65,6 +68,7 @@ const Home: React.FC = () => {
                     e.detail.value || "",
                   ])
                 }
+                onKeyPress={handleKeyPress}
                 value={actorNames[1]}
               />
             </IonItem>
@@ -102,6 +106,10 @@ const Home: React.FC = () => {
       </IonPage>
     </IonApp>
   );
+
+  function handleKeyPress(e: React.KeyboardEvent<HTMLIonInputElement>) {
+    if (e.nativeEvent.keyCode === ENTER_KEY_CODE) handleGoClick();
+  }
 
   async function handleGoClick() {
     menuController.close();
