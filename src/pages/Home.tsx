@@ -87,7 +87,7 @@ const Home: React.FC = () => {
               <IonIcon icon={person} slot="end" />
             </IonRange>
           </IonList>
-          <IonButton expand="full" onClick={handleGoClick}>
+          <IonButton expand="block" onClick={handleGoClick}>
             GO
           </IonButton>
         </IonContent>
