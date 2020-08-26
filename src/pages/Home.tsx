@@ -5,15 +5,18 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonMenu,
   IonPage,
+  IonRange,
   IonText,
   IonToolbar,
 } from "@ionic/react";
+import { film, person } from "ionicons/icons";
 import React, { useState } from "react";
 
 import Graph from "../components/Graph";
@@ -27,7 +30,7 @@ const defaultGraph = { links: [], nodes: [] } as {
 };
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Al Pacino", "Jim Carrey"]);
+  const [actorNames, setActorNames] = useState(["Robert De Niro", "Al Pacino"]);
   const [graph, setGraph] = useState(defaultGraph);
   const [minMoviePopularity, setMinMoviePopularity] = useState(30);
   const [maxCastPosition, setMaxCastPosition] = useState(10);
@@ -65,27 +68,24 @@ const Home: React.FC = () => {
                 value={actorNames[1]}
               />
             </IonItem>
-            <IonItem>
-              <IonLabel position="floating">Minimum Movie Popularity</IonLabel>
-              <IonInput
-                max="30"
-                min="0"
-                onIonChange={(e) =>
-                  setMinMoviePopularity(Number(e.detail.value))
-                }
-                type="number"
-                value={minMoviePopularity}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">Maximum Cast Position</IonLabel>
-              <IonInput
-                min="0"
-                onIonChange={(e) => setMaxCastPosition(Number(e.detail.value))}
-                type="number"
-                value={maxCastPosition}
-              />
-            </IonItem>
+            <IonRange
+              max={0}
+              min={30}
+              onIonChange={(e) => setMinMoviePopularity(Number(e.detail.value))}
+              value={minMoviePopularity}
+            >
+              <IonIcon icon={film} size="small" slot="start" />
+              <IonIcon icon={film} slot="end" />
+            </IonRange>
+            <IonRange
+              max={100}
+              min={1}
+              onIonChange={(e) => setMaxCastPosition(Number(e.detail.value))}
+              value={maxCastPosition}
+            >
+              <IonIcon icon={person} size="small" slot="start" />
+              <IonIcon icon={person} slot="end" />
+            </IonRange>
           </IonList>
           <IonButton expand="full" onClick={handleGoClick}>
             GO
@@ -125,6 +125,8 @@ const Home: React.FC = () => {
     );
   }
 };
+
+setTimeout(() => menuController.open(), 500);
 
 setTimeout(() => document.querySelector("IonButton")?.click(), 500);
 
