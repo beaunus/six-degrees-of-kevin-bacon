@@ -18,6 +18,7 @@ import {
 } from "@ionic/react";
 import { film, person } from "ionicons/icons";
 import React, { useState } from "react";
+import ReactTooltip from "react-tooltip";
 
 import Graph from "../components/Graph";
 import { getConnectedGraph, getLinksAndNodes, trimGraph } from "../lib/graph";
@@ -30,6 +31,15 @@ const defaultGraph = { links: [], nodes: [] } as {
   links: { source: string; target: string; value: number }[];
   nodes: { group: number; id: string }[];
 };
+
+window.addEventListener("keypress", (e) => {
+  if (e.ctrlKey && e.key === "p")
+    menuController
+      .isOpen()
+      .then((isOpen) =>
+        isOpen ? menuController.close() : menuController.open()
+      );
+});
 
 const Home: React.FC = () => {
   const [actorNames, setActorNames] = useState(["Robert De Niro", "Al Pacino"]);
@@ -97,9 +107,14 @@ const Home: React.FC = () => {
         </IonContent>
       </IonMenu>
       <IonPage id="main-content">
-        <IonButton expand="block" onClick={() => menuController.open()}>
+        <IonButton
+          data-tip="ctrl-P"
+          expand="block"
+          onClick={() => menuController.open()}
+        >
           Open Menu
         </IonButton>
+        <ReactTooltip />
         <IonContent>
           <Graph {...graph} />
         </IonContent>
