@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 
 import { D3Link, D3Node } from "../types";
 
-const NODE_RADIUS = 5;
+const NODE_RADIUS = 10;
 
 const Node: React.FC<{ node: D3Node; color: string }> = ({ node, color }) => {
   let thisRef = useRef<SVGCircleElement>(null);

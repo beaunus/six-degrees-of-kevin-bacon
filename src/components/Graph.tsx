@@ -38,8 +38,8 @@ const Graph: React.FC<{
         .attr("cy", (d) => d?.y);
 
       d3.selectAll<Element, Coordinate>(".label")
-        .attr("x", (d) => d?.x + 5)
-        .attr("y", (d) => d?.y + 5);
+        .attr("x", (d) => d?.x + 12)
+        .attr("y", (d) => d?.y + 12);
     });
   });
 
