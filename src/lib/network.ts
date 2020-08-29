@@ -5,23 +5,16 @@ import MovieDB from "node-themoviedb";
 import qs from "qs";
 
 const THE_MOVIE_DB_URL = process.env.THE_MOVIE_DB_URL;
-const THE_MOVIE_DB_API_KEY = process.env.THE_MOVIE_DB_API_KEY;
 const THE_MOVIE_DB_API_READ_ACCESS_TOKEN =
   process.env.THE_MOVIE_DB_API_READ_ACCESS_TOKEN;
 
 function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
   return axios
-    .get<T>(
-      `${THE_MOVIE_DB_URL}${path}?${qs.stringify({
-        ...query,
-        api_key: THE_MOVIE_DB_API_KEY,
-      })}`,
-      {
-        headers: {
-          Authorization: `Bearer ${THE_MOVIE_DB_API_READ_ACCESS_TOKEN}`,
-        },
-      }
-    )
+    .get<T>(`${THE_MOVIE_DB_URL}${path}?${qs.stringify(query)}`, {
+      headers: {
+        Authorization: `Bearer ${THE_MOVIE_DB_API_READ_ACCESS_TOKEN}`,
+      },
+    })
     .then(({ data }) => data)
     .catch(() => (null as unknown) as T);
 }
