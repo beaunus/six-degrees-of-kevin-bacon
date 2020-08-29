@@ -47,7 +47,7 @@ const Home: React.FC = () => {
   const [actorNames, setActorNames] = useState(["Bruce Lee", "Tom Hiddleston"]);
   const [graph, setGraph] = useState(defaultGraph);
   const [minMoviePopularity, setMinMoviePopularity] = useState(20);
-  const [maxCastPosition, setMaxCastPosition] = useState(100);
+  const [maxCastPosition, setMaxCastPosition] = useState(5);
   const [numDegreesOfSeparation, setNumDegreesOfSeparation] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
