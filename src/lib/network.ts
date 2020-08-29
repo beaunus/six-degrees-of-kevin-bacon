@@ -10,8 +10,8 @@ const THE_MOVIE_DB_API_READ_ACCESS_TOKEN =
 
 const BATCH_SIZE = Number(process.env.BATCH_SIZE) || 1000;
 
-function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
-  return axios
+const requestTheMovieDB = <T>(path: string, query?: _.Dictionary<unknown>) =>
+  axios
     .get<T>(`${THE_MOVIE_DB_URL}${path}?${qs.stringify(query)}`, {
       headers: {
         Authorization: `Bearer ${THE_MOVIE_DB_API_READ_ACCESS_TOKEN}`,
@@ -19,27 +19,25 @@ function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
     })
     .then(({ data }) => data)
     .catch(() => (null as unknown) as T);
-}
 
-function requestInBatches<T, U>(
+const requestInBatches = <T, U>(
   elements: U[],
   iteratee: (thingy: U) => Promise<T>,
   batchSize = BATCH_SIZE
-) {
-  return _.chunk(elements, batchSize).reduce<Promise<T[]>>(
+) =>
+  _.chunk(elements, batchSize).reduce<Promise<T[]>>(
     async (acc, cur) => [
       ...(await acc),
       ...(await Promise.all(cur.map(iteratee))),
     ],
     Promise.resolve(Array<T>())
   );
-}
 
-export function getMovieCredits(
+export const getMovieCredits = (
   movieIds: number[],
   options?: { maxOrder?: number }
-) {
-  return requestInBatches<MovieDB.Responses.Movie.GetCredits, number>(
+) =>
+  requestInBatches<MovieDB.Responses.Movie.GetCredits, number>(
     movieIds,
     (movieId: number) =>
       requestTheMovieDB<MovieDB.Responses.Movie.GetCredits>(
@@ -56,13 +54,12 @@ export function getMovieCredits(
       }))
       .filter(({ cast }) => cast.length)
   );
-}
 
-export function getPersonCredits(
+export const getPersonCredits = (
   personIds: number[],
   options?: { minPopularity?: number }
-) {
-  return requestInBatches<MovieDB.Responses.Person.GetCombinedCredits, number>(
+) =>
+  requestInBatches<MovieDB.Responses.Person.GetCombinedCredits, number>(
     personIds,
     (personId) =>
       requestTheMovieDB<MovieDB.Responses.Person.GetCombinedCredits>(
@@ -79,14 +76,10 @@ export function getPersonCredits(
       }))
       .filter(({ cast }) => cast.length)
   );
-}
 
-export function getPersons(actorsNames: string[]) {
-  return requestInBatches<MovieDB.Objects.Person, string>(
-    actorsNames,
-    (actorName) =>
-      requestTheMovieDB<MovieDB.Responses.Search.People>("/search/person", {
-        query: actorName,
-      }).then(({ results }) => results[0])
+export const getPersons = (actorsNames: string[]) =>
+  requestInBatches<MovieDB.Objects.Person, string>(actorsNames, (actorName) =>
+    requestTheMovieDB<MovieDB.Responses.Search.People>("/search/person", {
+      query: actorName,
+    }).then(({ results }) => results[0])
   );
-}
