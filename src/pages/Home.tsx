@@ -12,7 +12,9 @@ import {
   IonList,
   IonMenu,
   IonPage,
+  IonProgressBar,
   IonRange,
+  IonRow,
   IonText,
   IonToolbar,
 } from "@ionic/react";
@@ -46,6 +48,8 @@ const Home: React.FC = () => {
   const [graph, setGraph] = useState(defaultGraph);
   const [minMoviePopularity, setMinMoviePopularity] = useState(20);
   const [maxCastPosition, setMaxCastPosition] = useState(100);
+  const [numDegreesOfSeparation, setNumDegreesOfSeparation] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <IonApp>
@@ -115,6 +119,17 @@ const Home: React.FC = () => {
           Open Menu
         </IonButton>
         <ReactTooltip />
+        <IonRow className="ion-justify-content-center ion-padding">
+          <IonText>
+            {actorNames.join(" -> ")} : Number degrees of separation{" "}
+            {isLoading ? ">=" : "="} {numDegreesOfSeparation}
+          </IonText>
+        </IonRow>
+        {isLoading ? (
+          <IonRow className="ion-padding">
+            <IonProgressBar type="indeterminate" />
+          </IonRow>
+        ) : null}
         <IonContent>
           <Graph {...graph} />
         </IonContent>
@@ -135,17 +150,22 @@ const Home: React.FC = () => {
     );
     setGraph(getLinksAndNodes(moviesByActorName));
     const realActorNames = persons.map(({ name }) => name);
+    setIsLoading(true);
     setGraph(
       getLinksAndNodes(
         trimGraph(
-          await getConnectedGraph(persons, moviesByActorName, realActorNames, {
-            maxCastPosition,
-            minMoviePopularity,
-          }),
+          await getConnectedGraph(
+            persons,
+            moviesByActorName,
+            realActorNames,
+            setNumDegreesOfSeparation,
+            { maxCastPosition, minMoviePopularity }
+          ),
           realActorNames
         )
       )
     );
+    setIsLoading(false);
   }
 };
 

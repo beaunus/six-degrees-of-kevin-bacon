@@ -7,14 +7,17 @@ export async function getConnectedGraph(
   persons: MovieDB.Objects.Person[],
   moviesByActorName: { [actorName: string]: string[] },
   realActorNames: string[],
+  setNumGenerations: React.Dispatch<React.SetStateAction<number>>,
   options?: { maxCastPosition?: number; minMoviePopularity?: number }
 ) {
   const edgePersons = new Set<{ id: number; name: string }>(persons);
   const edgeMovies = new Set<{ id: number; name: string; title: string }>();
 
   let result = moviesByActorName;
+  let numGenerations = 0;
 
   while (!areActorsConnected(result, realActorNames)) {
+    setNumGenerations(++numGenerations);
     if (edgePersons.size) {
       const personCredits = await getPersonCredits(
         [...edgePersons].map(({ id }) => id),
@@ -58,6 +61,8 @@ export async function getConnectedGraph(
       result = _.merge({}, result, newMovieThing);
     }
   }
+  setNumGenerations(numGenerations);
+
   return result;
 }
 

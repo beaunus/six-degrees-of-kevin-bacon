@@ -1,6 +1,7 @@
 html,
 .container {
   background-color: #333;
+  color: white;
 }
 
 .node {
