@@ -22,7 +22,7 @@ const requestTheMovieDB = <T>(path: string, query?: _.Dictionary<unknown>) =>
 
 const requestInBatches = <T, U>(
   elements: U[],
-  iteratee: (thingy: U) => Promise<T>,
+  iteratee: (element: U) => Promise<T>,
   batchSize = BATCH_SIZE
 ) =>
   _.chunk(elements, batchSize).reduce<Promise<T[]>>(
