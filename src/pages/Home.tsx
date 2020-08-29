@@ -42,10 +42,10 @@ window.addEventListener("keypress", (e) => {
 });
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Robert De Niro", "Al Pacino"]);
+  const [actorNames, setActorNames] = useState(["Bruce Lee", "Tom Hiddleston"]);
   const [graph, setGraph] = useState(defaultGraph);
-  const [minMoviePopularity, setMinMoviePopularity] = useState(30);
-  const [maxCastPosition, setMaxCastPosition] = useState(10);
+  const [minMoviePopularity, setMinMoviePopularity] = useState(20);
+  const [maxCastPosition, setMaxCastPosition] = useState(100);
 
   return (
     <IonApp>
@@ -149,8 +149,6 @@ const Home: React.FC = () => {
   }
 };
 
-setTimeout(() => menuController.open(), 500);
-
-setTimeout(() => document.querySelector("IonButton")?.click(), 500);
+setTimeout(() => document.querySelector("ion-button")?.click(), 600);
 
 export default Home;
