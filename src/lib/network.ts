@@ -8,6 +8,8 @@ const THE_MOVIE_DB_URL = process.env.THE_MOVIE_DB_URL;
 const THE_MOVIE_DB_API_READ_ACCESS_TOKEN =
   process.env.THE_MOVIE_DB_API_READ_ACCESS_TOKEN;
 
+const BATCH_SIZE = Number(process.env.BATCH_SIZE) || 2;
+
 function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
   return axios
     .get<T>(`${THE_MOVIE_DB_URL}${path}?${qs.stringify(query)}`, {
@@ -19,16 +21,30 @@ function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
     .catch(() => (null as unknown) as T);
 }
 
+function requestInBatches<T, U>(
+  elements: U[],
+  iteratee: (thingy: U) => Promise<T>,
+  batchSize = BATCH_SIZE
+) {
+  return _.chunk(elements, batchSize).reduce<Promise<T[]>>(
+    async (acc, cur) => [
+      ...(await acc),
+      ...(await Promise.all(cur.map(iteratee))),
+    ],
+    Promise.resolve(Array<T>())
+  );
+}
+
 export function getMovieCredits(
   movieIds: number[],
   options?: { maxOrder?: number }
 ) {
-  return Promise.all(
-    movieIds.map((movieId) =>
+  return requestInBatches<MovieDB.Responses.Movie.GetCredits, number>(
+    movieIds,
+    (movieId: number) =>
       requestTheMovieDB<MovieDB.Responses.Movie.GetCredits>(
         `/movie/${movieId}/credits`
       )
-    )
   ).then((results) =>
     results
       .filter(Boolean)
@@ -46,12 +62,12 @@ export function getPersonCredits(
   personIds: number[],
   options?: { minPopularity?: number }
 ) {
-  return Promise.all(
-    personIds.map((personId) =>
+  return requestInBatches<MovieDB.Responses.Person.GetCombinedCredits, number>(
+    personIds,
+    (personId) =>
       requestTheMovieDB<MovieDB.Responses.Person.GetCombinedCredits>(
         `/person/${personId}/combined_credits`
       )
-    )
   ).then((data) =>
     data
       .flat()
@@ -66,11 +82,11 @@ export function getPersonCredits(
 }
 
 export function getPersons(actorsNames: string[]) {
-  return Promise.all(
-    actorsNames.map((actorName) =>
+  return requestInBatches<MovieDB.Objects.Person, string>(
+    actorsNames,
+    (actorName) =>
       requestTheMovieDB<MovieDB.Responses.Search.People>("/search/person", {
         query: actorName,
       }).then(({ results }) => results[0])
-    )
   );
 }
