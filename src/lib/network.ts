@@ -8,7 +8,7 @@ const THE_MOVIE_DB_URL = process.env.THE_MOVIE_DB_URL;
 const THE_MOVIE_DB_API_READ_ACCESS_TOKEN =
   process.env.THE_MOVIE_DB_API_READ_ACCESS_TOKEN;
 
-const BATCH_SIZE = Number(process.env.BATCH_SIZE) || 2;
+const BATCH_SIZE = Number(process.env.BATCH_SIZE) || 1000;
 
 function requestTheMovieDB<T>(path: string, query?: _.Dictionary<unknown>) {
   return axios
