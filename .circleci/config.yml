@@ -10,9 +10,13 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy:
+      - approve-deploy-stg:
+          type: approval
           requires:
             - build
+      - deploy-stg:
+          requires:
+            - approve-deploy-stg
           filters:
             branches:
               only: master
@@ -47,7 +51,7 @@ jobs:
           paths:
             - dist
 
-  deploy:
+  deploy-stg:
     docker:
       - image: circleci/python
     steps:
