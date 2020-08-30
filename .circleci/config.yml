@@ -49,7 +49,7 @@ jobs:
 
   deploy:
     docker:
-      - image: alpine:latest
+      - image: ubuntu:latest
     steps:
       - attach_workspace:
           at: ./
