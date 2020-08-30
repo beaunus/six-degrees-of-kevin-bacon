@@ -23,6 +23,7 @@ import React, { useState } from "react";
 import ReactTooltip from "react-tooltip";
 
 import Graph from "../components/Graph";
+import "../lib/event-listeners";
 import { getConnectedGraph, getLinksAndNodes, trimGraph } from "../lib/graph";
 import { getPersons } from "../lib/network";
 import "./Home.css";
@@ -33,15 +34,6 @@ const defaultGraph = { links: [], nodes: [] } as {
   links: { source: string; target: string; value: number }[];
   nodes: { group: number; id: string }[];
 };
-
-window.addEventListener("keypress", (e) => {
-  if (e.ctrlKey && e.key === "p")
-    menuController
-      .isOpen()
-      .then((isOpen) =>
-        isOpen ? menuController.close() : menuController.open()
-      );
-});
 
 const Home: React.FC = () => {
   const [actorNames, setActorNames] = useState(["Bruce Lee", "Tom Hiddleston"]);
