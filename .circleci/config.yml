@@ -49,7 +49,7 @@ jobs:
 
   deploy:
     docker:
-      - image: circleci/python:2.7
+      - image: alpine
     steps:
       - attach_workspace:
           at: ./
