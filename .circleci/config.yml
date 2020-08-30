@@ -1,0 +1,55 @@
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.16
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master branch
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14.8.0
+
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --immutable
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - "~/.cache/yarn deploy:"
+      - run:
+          name: Build
+          command: yarn build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist
+
+  deploy:
+    docker:
+      - image: circleci/python:2.7
+    steps:
+      - attach_workspace:
+          at: ./
+      - aws-s3/sync:
+          from: ./dist
+          to: ${STG_BUCKET}
+          arguments: |
+            --acl public-read
+          overwrite: true
