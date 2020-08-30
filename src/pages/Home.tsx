@@ -113,7 +113,7 @@ const Home: React.FC = () => {
         <ReactTooltip />
         <IonRow className="ion-justify-content-center ion-padding">
           <IonText>
-            {actorNames.join(" -> ")} : Number degrees of separation{" "}
+            {actorNames.join(" -> ")} : The Bacon Number{" "}
             {isLoading ? ">=" : "="} {numDegreesOfSeparation}
           </IonText>
         </IonRow>
