@@ -36,7 +36,7 @@ const defaultGraph = { links: [], nodes: [] } as {
 };
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Bruce Lee", "Tom Hiddleston"]);
+  const [actorNames, setActorNames] = useState(["Kevin Bacon", "Ian McKellen"]);
   const [graph, setGraph] = useState(defaultGraph);
   const [minMoviePopularity, setMinMoviePopularity] = useState(20);
   const [maxCastPosition, setMaxCastPosition] = useState(5);
