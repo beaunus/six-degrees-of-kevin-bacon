@@ -2,7 +2,7 @@
 
 This was created during my time as a student at Code Chrysalis.
 
-You can see this app in action at http://six-degrees-of-kevin-bacon-stg.s3-website-us-east-1.amazonaws.com/.
+You can see this app in action at http://six-degrees-of-kevin-bacon-prod.s3-website-us-east-1.amazonaws.com/.
 
 ## Motivation
 
