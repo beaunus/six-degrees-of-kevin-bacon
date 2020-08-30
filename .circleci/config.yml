@@ -49,7 +49,7 @@ jobs:
 
   deploy:
     docker:
-      - image: ubuntu:latest
+      - image: circleci/python
     steps:
       - attach_workspace:
           at: ./
