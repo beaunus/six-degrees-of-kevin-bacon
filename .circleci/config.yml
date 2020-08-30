@@ -14,9 +14,19 @@ workflows:
           type: approval
           requires:
             - build
+      - approve-deploy-prod:
+          type: approval
+          requires:
+            - build
       - deploy-stg:
           requires:
             - approve-deploy-stg
+          filters:
+            branches:
+              only: master
+      - deploy-prod:
+          requires:
+            - approve-deploy-prod
           filters:
             branches:
               only: master
@@ -60,6 +70,19 @@ jobs:
       - aws-s3/sync:
           from: ./dist
           to: ${STG_BUCKET}
+          arguments: |
+            --acl public-read
+          overwrite: true
+
+  deploy-prod:
+    docker:
+      - image: circleci/python
+    steps:
+      - attach_workspace:
+          at: ./
+      - aws-s3/sync:
+          from: ./dist
+          to: ${PROD_BUCKET}
           arguments: |
             --acl public-read
           overwrite: true
