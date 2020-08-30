@@ -37,6 +37,9 @@ jobs:
           paths:
             - "~/.cache/yarn deploy:"
       - run:
+          name: Copy Environment Variables
+          command: env > .env
+      - run:
           name: Build
           command: yarn build
       - persist_to_workspace:
