@@ -36,11 +36,11 @@ const defaultGraph = { links: [], nodes: [] } as {
 };
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Kevin Bacon", "Ian McKellen"]);
+  const [actorNames, setActorNames] = useState(["Kevin Bacon", "Bruce Lee"]);
   const [graph, setGraph] = useState(defaultGraph);
   const [minMoviePopularity, setMinMoviePopularity] = useState(20);
   const [maxCastPosition, setMaxCastPosition] = useState(5);
-  const [numDegreesOfSeparation, setNumDegreesOfSeparation] = useState(0);
+  const [baconNumber, setBaconNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   return (
@@ -114,7 +114,7 @@ const Home: React.FC = () => {
         <IonRow className="ion-justify-content-center ion-padding">
           <IonText>
             {actorNames.join(" -> ")} : The Bacon Number{" "}
-            {isLoading ? ">=" : "="} {numDegreesOfSeparation}
+            {isLoading ? ">=" : "="} {baconNumber}
           </IonText>
         </IonRow>
         {isLoading ? (
@@ -123,7 +123,7 @@ const Home: React.FC = () => {
           </IonRow>
         ) : null}
         <IonContent>
-          <Graph {...graph} />
+          <Graph {...graph} baconNumber={baconNumber} />
         </IonContent>
       </IonPage>
     </IonApp>
@@ -150,7 +150,7 @@ const Home: React.FC = () => {
             persons,
             moviesByActorName,
             realActorNames,
-            setNumDegreesOfSeparation,
+            setBaconNumber,
             { maxCastPosition, minMoviePopularity }
           ),
           realActorNames
