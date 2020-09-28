@@ -82,6 +82,7 @@ const Home: React.FC = () => {
               max={30}
               min={0}
               onIonChange={(e) => setMinMoviePopularity(Number(e.detail.value))}
+              pin
               value={minMoviePopularity}
             >
               <IonIcon icon={film} size="small" slot="start" />
@@ -91,6 +92,7 @@ const Home: React.FC = () => {
               max={100}
               min={1}
               onIonChange={(e) => setMaxCastPosition(Number(e.detail.value))}
+              pin
               value={maxCastPosition}
             >
               <IonIcon icon={person} size="small" slot="start" />
