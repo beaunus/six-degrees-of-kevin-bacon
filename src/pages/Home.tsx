@@ -79,8 +79,8 @@ const Home: React.FC = () => {
               />
             </IonItem>
             <IonRange
-              max={0}
-              min={30}
+              max={30}
+              min={0}
               onIonChange={(e) => setMinMoviePopularity(Number(e.detail.value))}
               value={minMoviePopularity}
             >
