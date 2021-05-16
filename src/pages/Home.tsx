@@ -78,26 +78,38 @@ const Home: React.FC = () => {
                 value={actorNames[1]}
               />
             </IonItem>
-            <IonRange
-              max={30}
-              min={0}
-              onIonChange={(e) => setMinMoviePopularity(Number(e.detail.value))}
-              pin
-              value={minMoviePopularity}
-            >
-              <IonIcon icon={film} size="small" slot="start" />
-              <IonIcon icon={film} slot="end" />
-            </IonRange>
-            <IonRange
-              max={100}
-              min={1}
-              onIonChange={(e) => setMaxCastPosition(Number(e.detail.value))}
-              pin
-              value={maxCastPosition}
-            >
-              <IonIcon icon={person} size="small" slot="start" />
-              <IonIcon icon={person} slot="end" />
-            </IonRange>
+            <IonItem>
+              <IonLabel position="floating">
+                Movie Popularity (Less &lt;--&gt; More)
+              </IonLabel>
+              <IonRange
+                max={30}
+                min={0}
+                onIonChange={(e) =>
+                  setMinMoviePopularity(Number(e.detail.value))
+                }
+                pin
+                value={minMoviePopularity}
+              >
+                <IonIcon icon={film} size="small" slot="start" />
+                <IonIcon icon={film} slot="end" />
+              </IonRange>
+            </IonItem>
+            <IonItem>
+              <IonLabel position="floating">
+                Role (Leading &lt;--&gt; Supporting)
+              </IonLabel>
+              <IonRange
+                max={100}
+                min={1}
+                onIonChange={(e) => setMaxCastPosition(Number(e.detail.value))}
+                pin
+                value={maxCastPosition}
+              >
+                <IonIcon icon={person} size="small" slot="start" />
+                <IonIcon icon={person} slot="end" />
+              </IonRange>
+            </IonItem>
           </IonList>
           <IonButton expand="block" onClick={handleGoClick}>
             GO
