@@ -36,9 +36,9 @@ const defaultGraph = { links: [], nodes: [] } as {
 };
 
 const Home: React.FC = () => {
-  const [actorNames, setActorNames] = useState(["Kevin Bacon", "Emma Watson"]);
+  const [actorNames, setActorNames] = useState(["Kevin Bacon", "Ian McKellan"]);
   const [graph, setGraph] = useState(defaultGraph);
-  const [minMoviePopularity, setMinMoviePopularity] = useState(20);
+  const [minMoviePopularity, setMinMoviePopularity] = useState(10);
   const [maxCastPosition, setMaxCastPosition] = useState(5);
   const [baconNumber, setBaconNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
