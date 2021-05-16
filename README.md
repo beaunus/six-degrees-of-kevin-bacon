@@ -29,7 +29,7 @@ The data is represented in a graph. There are two kinds of nodes:
 
 An edge between nodes implies that the _person_ appeared in the _movie_.
 
-![screenshot of simple graph](./docs/img/screenshot-simple-example.png "screenshot of simple graph")
+![screenshot of simple graph](./public/img/six-degrees-of-kevin-bacon.png "screenshot of simple graph")
 
 ### Data Source
 
